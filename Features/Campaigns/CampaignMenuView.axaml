@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AIRPG.Features.Campaigns"
+             x:Class="AIRPG.Features.Campaigns.CampaignMenuView"
+             x:DataType="vm:CampaignMenuViewModel"
+             MinWidth="1280" 
+             MinHeight="720"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+>
+  <Grid ColumnDefinitions="1*,4*" Background="#013401">
+   <Grid Background="#014501" RowDefinitions="*,Auto">
+    <!-- Campaign scroll -->
+    <ScrollViewer Grid.Row="0" 
+                  VerticalScrollBarVisibility="Auto"
+                  Margin="10">
+      <StackPanel Spacing="10">
+        <!-- Put buttons directly here -->
+        <Button Content="Campaign 1 - The Lost Mine" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 2 - Castle Ravenloft" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 3 - Tomb of Annihilation" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 4" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 5" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 6" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 7" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 8" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 9" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 10" FontSize="18" HorizontalAlignment="Stretch"/>
+        <!-- Add more until scrollbar appears -->
+      </StackPanel>
+    </ScrollViewer>
+
+
+    <!--Bottom buttons -->
+      <StackPanel  Orientation="Horizontal" Spacing="10" Grid.Row="1"  Margin="10">
+        <Button Content="Back" Command="{Binding OpenMainMenuCommand}"/>
+        <Button Content="New Campaign"/>
+      </StackPanel>
+    </Grid>
+
+  </Grid>
+</UserControl>
+
+
+

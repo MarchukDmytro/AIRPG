@@ -1,0 +1,40 @@
+<UserControl  xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:AIRPG.Features.MainMenu"  
+              x:Class="AIRPG.Features.MainMenu.MainMenuView"
+              x:DataType="vm:MainMenuViewModel"
+              MinWidth="800" 
+              MinHeight="450"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+>
+<Grid ColumnDefinitions="2.5*,1*,2.5*" RowDefinitions="4*,Auto,1*" Margin="4" Background="DarkRed">
+    
+    <!-- Container in middle cell (Row 1, Column 1) -->
+    <StackPanel Grid.Row="1" 
+                Grid.Column="1" 
+                Spacing="10"
+                VerticalAlignment="Center">
+        
+        <Button Content="Start Campaign"
+                Command="{Binding OpenCampaignMenuCommand}"
+                HorizontalAlignment="Stretch"/>
+                
+      <Button Content="Brewery" 
+              Command="{Binding OpenBreweryCommand}"
+                HorizontalAlignment="Stretch"/>
+
+        <Button Content="Galery"
+                 HorizontalAlignment="Stretch"/>
+        
+        <Button Content="Settings" 
+                HorizontalAlignment="Stretch"/>
+                
+        <Button Content="Exit" 
+                HorizontalAlignment="Stretch"/>
+                
+    </StackPanel>
+    
+</Grid>
+</UserControl>
+

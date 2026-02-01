@@ -1,0 +1,65 @@
+<UserControl  xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:AIRPG.Features.Brewery"  
+              x:Class="AIRPG.Features.Brewery.BreweryView"
+              x:DataType="vm:BreweryViewModel"
+              MinWidth="800" 
+              MinHeight="450"
+              HorizontalAlignment="Stretch"
+  VerticalAlignment="Stretch">
+  <Grid  ColumnDefinitions="1*,4*" RowDefinitions="Auto,*" Background="LightGray">
+    <!--Top Bar -->
+        <!-- LEFT SIDE (Column 0): Back + ComboBox -->
+    <Grid Grid.Column="0"
+          Grid.Row="0"
+              ColumnDefinitions="Auto,*">
+
+            <Button Grid.Column="0"
+        Content="Back"
+        Command="{Binding OpenMainMenuCommand}"
+        HorizontalAlignment="Stretch"/>
+
+            <ComboBox Grid.Column="1" HorizontalAlignment="Stretch">
+                <ComboBoxItem Content="Worlds"/>
+                <ComboBoxItem Content="Items"/>
+                <ComboBoxItem Content="Spells"/>
+                <ComboBoxItem Content="Classes"/>
+            </ComboBox>
+        </Grid>
+
+        <!-- RIGHT SIDE (Column 1): Buttons + Settings -->
+        <Grid Grid.Column="1"
+              ColumnDefinitions="*,*,*,*,Auto">
+
+            <!-- Evenly stretched buttons -->
+            <Button Grid.Column="0" Content="Lore" Margin="10,0,0,0" HorizontalAlignment="Stretch"/>
+            <Button Grid.Column="1" Content="Abstract" HorizontalAlignment="Stretch"/>
+            <Button Grid.Column="2" Content="Map" HorizontalAlignment="Stretch"/>
+            <Button Grid.Column="3" Content="Create" HorizontalAlignment="Stretch"/>
+
+            <!-- Settings pinned to top-rightv -->
+            <Button Grid.Column="4" HorizontalAlignment="Right" Background="Transparent">
+              <Image Source="\Assets\settings.png" Width="24" Height="24"/>
+            </Button>
+        </Grid>
+
+
+    <!-- Left scroleble bar-->
+    <ScrollViewer Grid.Row="1" Grid.Column="0" Background="LightCyan">
+      <StackPanel Spacing="10" Margin="10">
+        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
+      </StackPanel>
+    </ScrollViewer>
+
+
+    <!--<ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding WorkZoneContent}" Background="LightGreen" ></ContentControl>-->
+
+    <ContentControl Grid.Row="1" Grid.Column="1" Content="Binding WorkZoneContent" Background="LightGreen" ></ContentControl>
+  </Grid>
+
+</UserControl>
