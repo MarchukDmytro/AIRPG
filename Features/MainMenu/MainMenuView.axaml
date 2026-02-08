@@ -3,8 +3,8 @@
               xmlns:vm="using:AIRPG.Features.MainMenu"  
               x:Class="AIRPG.Features.MainMenu.MainMenuView"
               x:DataType="vm:MainMenuViewModel"
-              MinWidth="800" 
-              MinHeight="450"
+              MinWidth="1280" 
+              MinHeight="720"
               HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch"
 >
@@ -16,7 +16,7 @@
                 Spacing="10"
                 VerticalAlignment="Center">
         
-        <Button Content="Start Campaign"
+        <Button Content="Campaign"
                 Command="{Binding OpenCampaignMenuCommand}"
                 HorizontalAlignment="Stretch"/>
                 
@@ -31,7 +31,8 @@
                 HorizontalAlignment="Stretch"/>
                 
         <Button Content="Exit" 
-                HorizontalAlignment="Stretch"/>
+        HorizontalAlignment="Stretch"
+        Command="{Binding ExitCommand}"/>
                 
     </StackPanel>
     

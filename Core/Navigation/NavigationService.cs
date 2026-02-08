@@ -1,8 +1,11 @@
 using ReactiveUI;
+using Avalonia;
+using Avalonia.Controls.ApplicationLifetimes;
 using AIRPG.Core.ViewModels;
 using AIRPG.Features.MainMenu;
 using AIRPG.Features.Campaigns;
 using AIRPG.Features.Brewery;
+using AIRPG.Features.Game;
 
 namespace AIRPG.Core.Navigation;
 
@@ -24,10 +27,14 @@ public class NavigationService : ReactiveObject, INavigationService
         private set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
 
+    public void ToGameMenu() => CurrentViewModel = new MainGameViewModel(this);
     public void ToMainMenu() => CurrentViewModel = new MainMenuViewModel(this);
     public void ToCampaignMenu() => CurrentViewModel = new CampaignMenuViewModel(this);
     public void ToSettings() { /* TODO */ }
     public void ToGallery() { /* TODO */ }
     public void ToBrewery() => CurrentViewModel = new BreweryViewModel(this);
-    public void Exit() { /* TODO */ }   // placeholders for future features
+    public void Exit()
+    {
+        if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) { desktop.Shutdown(); }
+    }
 }

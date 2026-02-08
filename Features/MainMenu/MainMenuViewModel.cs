@@ -14,9 +14,11 @@ public class MainMenuViewModel : ViewModelBase
 
         OpenCampaignMenuCommand = ReactiveCommand.Create(() => _navigation.ToCampaignMenu());
         OpenBreweryCommand = ReactiveCommand.Create(() => _navigation.ToBrewery());
+        ExitCommand = ReactiveCommand.Create(() => _navigation.Exit());
     }
 
     private readonly INavigationService _navigation;
     public ReactiveCommand<Unit, Unit> OpenCampaignMenuCommand { get; }
     public ReactiveCommand<Unit, Unit> OpenBreweryCommand { get; }
+    public ReactiveCommand<Unit, Unit> ExitCommand { get; }
 }

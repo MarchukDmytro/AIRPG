@@ -14,9 +14,13 @@ public class CampaignMenuViewModel : ViewModelBase
         _navigation = navigation;
 
         OpenMainMenuCommand = ReactiveCommand.Create(() => _navigation.ToMainMenu());
+        OpenGameViewCommand = ReactiveCommand.Create(() => _navigation.ToGameMenu());
     }
 
     private readonly INavigationService _navigation;
+
+    //Commands
     public ReactiveCommand<Unit, Unit> OpenMainMenuCommand { get; }
+    public ReactiveCommand<Unit, Unit> OpenGameViewCommand { get; }
 }
 

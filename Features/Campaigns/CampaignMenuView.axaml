@@ -3,10 +3,6 @@
              xmlns:vm="using:AIRPG.Features.Campaigns"
              x:Class="AIRPG.Features.Campaigns.CampaignMenuView"
              x:DataType="vm:CampaignMenuViewModel"
-             MinWidth="1280" 
-             MinHeight="720"
-             HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch"
 >
   <Grid ColumnDefinitions="1*,4*" Background="#013401">
    <Grid Background="#014501" RowDefinitions="*,Auto">
@@ -16,9 +12,9 @@
                   Margin="10">
       <StackPanel Spacing="10">
         <!-- Put buttons directly here -->
-        <Button Content="Campaign 1 - The Lost Mine" FontSize="18" HorizontalAlignment="Stretch"/>
-        <Button Content="Campaign 2 - Castle Ravenloft" FontSize="18" HorizontalAlignment="Stretch"/>
-        <Button Content="Campaign 3 - Tomb of Annihilation" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 1 - Test Dummy" FontSize="18" HorizontalAlignment="Stretch" Command="{Binding OpenGameViewCommand}"/>
+        <Button Content="Campaign 3" FontSize="18" HorizontalAlignment="Stretch"/>
+        <Button Content="Campaign 3" FontSize="18" HorizontalAlignment="Stretch"/>
         <Button Content="Campaign 4" FontSize="18" HorizontalAlignment="Stretch"/>
         <Button Content="Campaign 5" FontSize="18" HorizontalAlignment="Stretch"/>
         <Button Content="Campaign 6" FontSize="18" HorizontalAlignment="Stretch"/>
