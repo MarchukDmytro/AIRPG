@@ -380,7 +380,7 @@ def main(args):
     with open(f"Worlds/world_{RUN_ID}.md", "w", encoding="utf-8") as f:
         f.write(final_md)
 
-    print(f"Finished in {iteration} iterations in {time.time() - start_time:.2f} seconds. File: \nWorlds/world_{RUN_ID}}.md")
+    print(f"Finished in {iteration} iterations in {time.time() - start_time:.2f} seconds. File: \nWorlds/world_{RUN_ID}.md")
 
 
 if __name__ == "__main__":

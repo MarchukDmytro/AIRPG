@@ -5,8 +5,6 @@ using AIRPG.Core.ViewModels;
 using AIRPG.Features.MainMenu;
 using AIRPG.Features.Campaigns;
 using AIRPG.Features.Brewery;
-using AIRPG.Features.Game;
-
 namespace AIRPG.Core.Navigation;
 
 public class NavigationService : ReactiveObject, INavigationService
@@ -27,7 +25,7 @@ public class NavigationService : ReactiveObject, INavigationService
         private set => this.RaiseAndSetIfChanged(ref _currentViewModel, value);
     }
 
-    public void ToGameMenu() => CurrentViewModel = new MainGameViewModel(this);
+    public void ToGameMenu() { /* TODO */ }
     public void ToMainMenu() => CurrentViewModel = new MainMenuViewModel(this);
     public void ToCampaignMenu() => CurrentViewModel = new CampaignMenuViewModel(this);
     public void ToSettings() { /* TODO */ }

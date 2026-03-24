@@ -1,0 +1,84 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AIRPG.Features.Brewery.Editors"
+             xmlns:views="using:AIRPG.Features.Brewery.Editors"
+             xmlns:main_vm="using:AIRPG.Features.Brewery"
+             x:Class="AIRPG.Features.Brewery.Editors.EditorView"
+             x:DataType="main_vm:BreweryViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="Button.Buttons">
+      <Setter Property="Margin" Value="3"/>
+      <Setter Property="Background" Value="DarkGray"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+  </UserControl.Styles>
+
+  <Grid ColumnDefinitions="3*,10*,1.5*" Background="Green">
+
+    <ScrollViewer Grid.Column="0"/>
+
+    <!-- middle: each tab VM renders its own work area -->
+    <ContentControl Grid.Column="1" Content="{Binding CurrentTab}">
+      <ContentControl.DataTemplates>    
+
+        <DataTemplate DataType="vm:WorldEditorViewModel">
+          <views:WorldEditorWorkAreaView/>
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:ItemEditorViewModel">
+          <TextBlock Text="WIP"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:SpellEditorViewModel">
+          <TextBlock Text="WIP"/>
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:ClassEditorViewModel">
+          <TextBlock Text="WIP"/>
+        </DataTemplate>
+
+      </ContentControl.DataTemplates>
+    </ContentControl>
+
+    <!-- right: buttons, same CurrentTab but different templates -->
+    <Grid Grid.Column="2" RowDefinitions="*,Auto">
+      <ContentControl Grid.Row="0" Content="{Binding CurrentTab}">
+        <ContentControl.DataTemplates>
+
+          <DataTemplate DataType="vm:WorldEditorViewModel">
+            <StackPanel>
+              <Button Content="Create"   Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Create"/>
+              <Button Content="Lore"     Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Lore"/>
+              <Button Content="Abstract" Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Abstract"/>
+              <Button Content="Map"      Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Map"/>
+            </StackPanel>
+          </DataTemplate>
+
+          <DataTemplate DataType="vm:ItemEditorViewModel">
+            <StackPanel>
+              <Button Content="Create"   Classes="Buttons"  CommandParameter="Create"/>
+              <Button Content="Image"   Classes="Buttons"  CommandParameter="Create"/>
+            </StackPanel>
+          </DataTemplate>
+
+          <DataTemplate DataType="vm:SpellEditorViewModel">
+            <TextBlock Text="WIP"/>
+          </DataTemplate>
+
+          <DataTemplate DataType="vm:ClassEditorViewModel">
+            <TextBlock Text="WIP"/>
+          </DataTemplate>
+
+        </ContentControl.DataTemplates>
+      </ContentControl>
+
+      <ContentControl Grid.Row="1"/>
+    </Grid>
+
+  </Grid>
+
+</UserControl>

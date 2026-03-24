@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:vm="using:AIRPG.Features.Brewery.Settings">
+    <!-- World Settings Template -->
+    <DataTemplate x:Key="BreweryWorldSettingsTemplate" DataType="vm:BreweryWorldSettingsViewModel">
+        <StackPanel Background="Gray" Spacing="6">
+             <ComboBox ItemsSource="{Binding LLMs}"
+                      SelectedItem="{Binding CurrentLLM, Mode=TwoWay}" />
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Critics:"/>
+                <NumericUpDown Value="{Binding Critics}" Minimum="0" Maximum="10" FormatString="{}{0:F0}"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Generation time:"/>
+                <NumericUpDown Value="{Binding TimeOut}" Minimum="0" FormatString="{}{0:F0}"/>
+            </StackPanel>
+        </StackPanel>
+    </DataTemplate>
+    <!-- Item Settings Template -->    <DataTemplate x:Key="BreweryItemSettingsTemplate" DataType="vm:BreweryItemSettingsViewModel">
+        <TextBlock Text="WIP"/>
+    </DataTemplate>
+    <!-- Spells Settings Template -->
+    <DataTemplate x:Key="BrewerySpellsSettingsTemplate" DataType="vm:BrewerySpellsSettingsViewModel">
+        <TextBlock Text="WIP"/>
+    </DataTemplate>
+    <!-- Classes Settings Template -->
+    <DataTemplate x:Key="BreweryClassesSettingsTemplate" DataType="vm:BreweryClassesSettingsViewModel">
+        <TextBlock Text="WIP"/> 
+    </DataTemplate>
+</ResourceDictionary>

@@ -5,7 +5,7 @@
             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             x:DataType="vm:MainWindowViewModel"
             x:Class="AIRPG.Views.MainWindow"
-            Icon="/Assets/AIRPG-logo.ico"
+            Icon="avares://AIRPG/Assets/AIRPG-logo.ico"
             Title="AIRPG"
             WindowState="FullScreen"
             SystemDecorations="None"

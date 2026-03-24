@@ -1,89 +1,110 @@
 <UserControl  xmlns="https://github.com/avaloniaui"
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-              xmlns:vm="using:AIRPG.Features.Brewery"  
+              xmlns:vm="using:AIRPG.Features.Brewery"
+              xmlns:views="using:AIRPG.Features.Brewery.Editors"
+              xmlns:vm_settings="using:AIRPG.Features.Brewery.Settings"
               x:Class="AIRPG.Features.Brewery.BreweryView"
-  x:DataType="vm:BreweryViewModel"
-  MinWidth="1280"
-  MinHeight="720"
-  VerticalAlignment="Stretch">
-  <Grid  ColumnDefinitions="2*,5*,Auto" RowDefinitions="Auto,*" Background="LightGray">
-        <!-- LEFT SIDE (Column 0):  ComboBox -->
-    <ComboBox Grid.Column="0" Grid.Row="0"  HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedIndex="0">
+              x:DataType="vm:BreweryViewModel"
+              MinWidth="1280"
+              MinHeight="720"
+              VerticalAlignment="Stretch">
+
+
+   <UserControl.Styles>
+    <Style Selector="Button.Buttons">
+      <Setter Property="Margin" Value="3"/>
+      <Setter Property="Background" Value="DarkGray"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+  </UserControl.Styles>
+
+  <UserControl.Resources>
+      <ResourceDictionary>
+          <ResourceDictionary.MergedDictionaries>
+              <ResourceInclude Source="/Features/Brewery/Settings/BrewerySettingsTemplates.axaml"/>
+          </ResourceDictionary.MergedDictionaries>
+      </ResourceDictionary>
+  </UserControl.Resources>
+
+<!-- Main grid -->
+  <Grid ColumnDefinitions="3*,10*,1.5*" RowDefinitions="Auto,*" Background="Yellow">
+
+
+<!-- System Selector -->
+    <ComboBox Grid.Column="0" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Center" SelectedIndex="0" Background="DarkGray">
         <ComboBoxItem Content="DnD 5e 2025"/>
         <ComboBoxItem Content="Pathfinder"/>
     </ComboBox>
 
-    <!-- RIGHT SIDE (Column 1): Buttons + Settings -->
-    <Grid Grid.ColumnSpan="2"
-          Grid.Column="1"
-          Grid.Row="0"
-          Background="DarkGray"
-          ColumnDefinitions="*,*,*,*,,Auto,Auto">
 
-        <!-- Evenly stretched buttons -->
-        <Button Grid.Column="0" Content="World" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button Grid.Column="1" Content="Items" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button Grid.Column="2" Content="Spells" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-        <Button Grid.Column="3" Content="Classes" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
-      
-      <Button Grid.Column="4"
-          Content="Back"
-          Margin="5,0,5,0"
-          Command="{Binding OpenMainMenuCommand}"
-          HorizontalAlignment="Stretch"/>
+<!-- Top Tabs -->
+    <Grid Grid.Column="1" Grid.Row="0" ColumnDefinitions="*,*,*,*">
+        <Button Grid.Column="0" Content="World" Classes="Buttons" Command="{Binding ChangeTabCommand}" CommandParameter="World"/> 
+        <Button Grid.Column="1" Content="Items" Classes="Buttons" Command="{Binding ChangeTabCommand}" CommandParameter="Items"/> 
+        <Button Grid.Column="2" Content="Spells" Classes="Buttons" Command="{Binding ChangeTabCommand}" CommandParameter="Spells"/> 
+        <Button Grid.Column="3" Content="Classes" Classes="Buttons" Command="{Binding ChangeTabCommand}" CommandParameter="Classes"/> 
+    </Grid>
 
-        <!-- Settings pinned to top-rightv -->
-        <Button Grid.Column="5" HorizontalAlignment="Right" Background="Transparent">
-          <Image Source="\Assets\settings.png" Width="24" Height="24"/>
+
+<!-- Back to main menu -->
+    <Grid Grid.Column="2" ColumnDefinitions="*,*">
+      <Border Grid.Column="0" Background="DarkGray" CornerRadius="24" Padding="0" BorderThickness="3" Margin="0,0,5,0">
+        <Button Command="{Binding OpenMainMenuCommand}" CornerRadius="24" HorizontalAlignment="Stretch">
+            <TextBlock Text="←" FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center" />
+        </Button>
+      </Border>
+
+<!-- Settings -->
+      <Border Grid.Column="2" Background="DarkGray" CornerRadius="24" Padding="0" BorderThickness="3"> 
+        <Button CornerRadius="24" HorizontalAlignment="Stretch">
+          <TextBlock Text="⚙"  FontSize="16" VerticalAlignment="Center" HorizontalAlignment="Center"/>
           <Button.Flyout>
             <Flyout>
-            <StackPanel Background="Gray">
+              <Border Padding="10" MinWidth="250">
+                 <ContentControl Content="{Binding CurrentSettings}">
+                  <ContentControl.DataTemplates>
+                    
+                      <DataTemplate DataType="vm_settings:BreweryWorldSettingsViewModel">
+                          <StackPanel Spacing="6">
+                              <ComboBox ItemsSource="{Binding LLMs}"
+                                        SelectedItem="{Binding CurrentLLM, Mode=TwoWay}"/>
+                              <StackPanel Orientation="Horizontal">
+                                  <TextBlock Text="Critics:"/>
+                                  <NumericUpDown Value="{Binding Critics}" Minimum="0" Maximum="10" FormatString="{}{0:F0}"/>
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal">
+                                  <TextBlock Text="Generation time:"/>
+                                  <NumericUpDown Value="{Binding TimeOut}" Minimum="0" FormatString="{}{0:F0}"/>
+                              </StackPanel>
+                          </StackPanel>
+                      </DataTemplate>
 
-              <ComboBox Name="Model" ItemsSource="{Binding Models}" SelectedItem="{Binding CurrentModel, Mode=TwoWay}"/>
+                      <DataTemplate DataType="vm_settings:BreweryItemSettingsViewModel">
+                          <TextBlock Text="WIP"/>
+                      </DataTemplate>
 
-              <StackPanel Orientation="Horizontal">
-                <TextBlock>Critics: </TextBlock>
-                <NumericUpDown Value="{Binding Critics,Mode=TwoWay}" Minimum="0" Maximum="10"/>
-              </StackPanel>
+                      <DataTemplate DataType="vm_settings:BrewerySpellsSettingsViewModel">
+                          <TextBlock Text="WIP"/>
+                      </DataTemplate>
 
-              <StackPanel Orientation="Horizontal">
-                <TextBlock>Generation time in min: </TextBlock>
-                <NumericUpDown Value="{Binding TimeOut,Mode=TwoWay}" Minimum="0"/>
-              </StackPanel>
+                      <DataTemplate DataType="vm_settings:BreweryClassesSettingsViewModel">
+                          <TextBlock Text="WIP"/>
+                      </DataTemplate>
 
-            </StackPanel>
+                  </ContentControl.DataTemplates>
+              </ContentControl>
+              </Border>
             </Flyout>
           </Button.Flyout>
         </Button>
+      </Border>
     </Grid>
-
-    <StackPanel Grid.Column="2" Grid.Row="1" Background="Gray">
-      <Button Content="Lore" HorizontalAlignment="Stretch"/>
-      <Button Content="Abstract" HorizontalAlignment="Stretch"/>
-      <Button Content="Map" HorizontalAlignment="Stretch"/>
-      <Button Content="Generate" HorizontalAlignment="Stretch" Command="{Binding StartWorldGenerationCommand}"/>
-    </StackPanel>
-
-    <Button Grid.Column="2" Grid.Row="1" Content="Finish" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="Green"/>
-
-    <!-- Left scroleble bar-->
-    <ScrollViewer Grid.Row="1" Grid.Column="0" Background="DarkRed">
-      <StackPanel Spacing="10" Margin="10" >
-        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch" />
-        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
-        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
-        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
-        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
-        <Button Content="Dummy" FontSize="18" HorizontalAlignment="Stretch"/>
-      </StackPanel>
-    </ScrollViewer>
-
-    <Grid Grid.Row="1" Grid.Column="1" RowDefinitions="2*,*">
-      <TextBox Grid.Row="0" Text="{Binding WorldText}" TextWrapping="Wrap" AcceptsReturn="True" Watermark="{Binding WorldTextWatermark}"/>
-
-      <TextBox Grid.Row="1" Text="{Binding UserPrompt}" TextWrapping="Wrap" AcceptsReturn="True"/>
-    </Grid>
-
+    
+<!-- Row 1 Entity Scroll  Right Buttons   Work Area -->
+    <views:EditorView Grid.Row="1" Grid.ColumnSpan="3"/>
   </Grid>
 
 </UserControl>

@@ -1,0 +1,40 @@
+<UserControl  xmlns="https://github.com/avaloniaui"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:vm="using:AIRPG.Features.Game"  
+              x:Class="AIRPG.Features.Game.MainGameView"
+  x:DataType="vm:MainGameViewModel"
+  MinWidth="1280"
+  MinHeight="720"
+>
+  <Grid ColumnDefinitions="Auto,3*,*" RowDefinitions="*" >    
+    <ContentControl Grid.Column="0" 
+      Content="Character" Background="DarkOrange"/>
+
+    <Grid RowDefinitions="Auto,*" Grid.Column="1">
+      <ContentControl Grid.Row="0"
+        Content="Map Placeholder" Background="DarkSeaGreen"
+        Height="{Binding $self.Bounds.Width}"
+      />
+      <ContentControl Grid.Row="1"
+        Content="Actions Placeholder"
+        Background="Gray"
+      />
+    </Grid>
+
+    <Grid RowDefinitions="*,Auto" Grid.Column="2">
+      <ContentControl Grid.Row="0" 
+        Content="Chat Window Placeholder" Background="DarkRed"/>
+      <!--<ContentControl Grid.Row="1"
+        Content="Input bar placeholder"
+        Background="Red"/>-->
+      <Grid ColumnDefinitions="*,Auto" Grid.Row="1" Background="Gray">
+        <TextBox Grid.Column="0" Watermark="Enter your input" TextWrapping="Wrap" AcceptsReturn="True"/>
+        <Button Grid.Column="1" Background="Transparent" HorizontalAlignment="Right">
+          <TextBlock Text="➤" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        </Button>
+      </Grid>
+    </Grid> 
+  </Grid>
+
+
+</UserControl>

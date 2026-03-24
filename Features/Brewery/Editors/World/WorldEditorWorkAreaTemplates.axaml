@@ -1,0 +1,35 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AIRPG.Features.Brewery.Editors.World"
+             xmlns:main_vm="using:AIRPG.Features.Brewery.Editors"
+             x:Class="AIRPG.Features.Brewery.Editors.WorldEditorWorkAreaView"
+             x:DataType="main_vm:WorldEditorViewModel">
+
+<UserControl.DataTemplates>
+        <DataTemplate DataType="vm:WorldCreateWorkAreaViewModel">
+            <Grid RowDefinitions="2*,*">
+                <TextBox Grid.Row="0" Text="{Binding WorldText}"
+                        TextWrapping="Wrap" AcceptsReturn="True"
+                        Watermark="{Binding WorldTextWatermark}"/>
+                <TextBox Grid.Row="1" Text="{Binding UserPrompt}"
+                        TextWrapping="Wrap" AcceptsReturn="True"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:WorldLoreWorkAreaViewModel">
+            <TextBlock>Lore</TextBlock>
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:WorldAbstractWorkAreaViewModel">
+            <TextBlock>Abstract</TextBlock>
+        </DataTemplate>
+
+        <DataTemplate DataType="vm:WorldMapWorkAreaViewModel">
+            <TextBlock>Map</TextBlock>
+        </DataTemplate>
+
+</UserControl.DataTemplates>
+             
+<ContentControl Content="{Binding Workspace}" Background="Purple"/>
+
+</UserControl>
