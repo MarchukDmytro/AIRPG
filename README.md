@@ -2,7 +2,7 @@
 
 The goal is to provide a structured, extensible environment for:
 
-creating game elements like worlds (settings), items, spells, classes, creatures, maps, etc
+Creating game elements like worlds (settings), items, spells, classes, creatures, maps, etc
 
 Game-mode with AI GM, automatic long-term memory and self-expending settings, image, items, enemys, quest generation and a lot more.
 
