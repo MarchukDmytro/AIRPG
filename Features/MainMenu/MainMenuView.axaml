@@ -3,12 +3,12 @@
               xmlns:vm="using:AIRPG.Features.MainMenu"  
               x:Class="AIRPG.Features.MainMenu.MainMenuView"
               x:DataType="vm:MainMenuViewModel"
-              MinWidth="1280" 
-              MinHeight="720"
-              HorizontalAlignment="Stretch"
-              VerticalAlignment="Stretch"
 >
-<Grid ColumnDefinitions="2.5*,1*,2.5*" RowDefinitions="4*,Auto,1*" Margin="4" Background="DarkRed">
+<Grid ColumnDefinitions="*,Auto,*" RowDefinitions="4*,Auto,1*" Margin="4">
+        <Grid.Background>
+                <ImageBrush Source="/Assets/MainMenu.png" 
+                    Stretch="UniformToFill"/>
+        </Grid.Background>
     
     <!-- Container in middle cell (Row 1, Column 1) -->
     <StackPanel Grid.Row="1" 
@@ -20,12 +20,12 @@
                 Command="{Binding OpenCampaignMenuCommand}"
                 HorizontalAlignment="Stretch"/>
                 
-      <Button Content="Brewery" 
+        <Button Content="Brewery" 
               Command="{Binding OpenBreweryCommand}"
                 HorizontalAlignment="Stretch"/>
 
-        <Button Content="Galery"
-                 HorizontalAlignment="Stretch"/>
+        <Button Content="Gallery"
+                 HorizontalAlignment="Stretch" />
         
         <Button Content="Settings" 
                 HorizontalAlignment="Stretch"/>

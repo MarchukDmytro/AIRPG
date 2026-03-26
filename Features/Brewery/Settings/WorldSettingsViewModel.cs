@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using Avalonia.Logging;
 using System;
 
-namespace AIRPG.Features.Brewery.Settings;
+namespace AIRPG.Features.Brewery.Editors.Settings;
 
-public class BreweryWorldSettingsViewModel : ViewModelBase
+public class WorldCreateSettingsViewModel : ViewModelBase
 {
     private string _currentLLM = string.Empty;
     private int _critics = 3;
@@ -43,11 +43,9 @@ public class BreweryWorldSettingsViewModel : ViewModelBase
         set => this.RaiseAndSetIfChanged(ref _isLoadingLLMs, value);
     }
 
-    public BreweryWorldSettingsViewModel()
+    public WorldCreateSettingsViewModel()
     {
         _ = load_models();
-     
-        
     }
     private async Task load_models()
     {
@@ -121,4 +119,7 @@ public class BreweryWorldSettingsViewModel : ViewModelBase
     }
 
 }
+public class WorldLoreSettingsViewModel : ViewModelBase{}
+public class WorldAbstractSettingsViewModel : ViewModelBase{}
 
+public class WorldMapSettingsViewModel : ViewModelBase{}

@@ -8,7 +8,6 @@
             Icon="avares://AIRPG/Assets/AIRPG-logo.ico"
             Title="AIRPG"
             WindowState="FullScreen"
-            SystemDecorations="None"
   >
 
   <ContentControl Content="{Binding CurrentViewModel}"/>

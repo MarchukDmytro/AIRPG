@@ -5,8 +5,7 @@
               xmlns:vm_settings="using:AIRPG.Features.Brewery.Settings"
               x:Class="AIRPG.Features.Brewery.BreweryView"
               x:DataType="vm:BreweryViewModel"
-              MinWidth="1280"
-              MinHeight="720"
+              HorizontalAlignment="Stretch"
               VerticalAlignment="Stretch">
 
 
@@ -20,14 +19,6 @@
       <Setter Property="VerticalContentAlignment" Value="Center"/>
     </Style>
   </UserControl.Styles>
-
-  <UserControl.Resources>
-      <ResourceDictionary>
-          <ResourceDictionary.MergedDictionaries>
-              <ResourceInclude Source="/Features/Brewery/Settings/BrewerySettingsTemplates.axaml"/>
-          </ResourceDictionary.MergedDictionaries>
-      </ResourceDictionary>
-  </UserControl.Resources>
 
 <!-- Main grid -->
   <Grid ColumnDefinitions="3*,10*,1.5*" RowDefinitions="Auto,*" Background="Yellow">
@@ -64,38 +55,7 @@
           <Button.Flyout>
             <Flyout>
               <Border Padding="10" MinWidth="250">
-                 <ContentControl Content="{Binding CurrentSettings}">
-                  <ContentControl.DataTemplates>
-                    
-                      <DataTemplate DataType="vm_settings:BreweryWorldSettingsViewModel">
-                          <StackPanel Spacing="6">
-                              <ComboBox ItemsSource="{Binding LLMs}"
-                                        SelectedItem="{Binding CurrentLLM, Mode=TwoWay}"/>
-                              <StackPanel Orientation="Horizontal">
-                                  <TextBlock Text="Critics:"/>
-                                  <NumericUpDown Value="{Binding Critics}" Minimum="0" Maximum="10" FormatString="{}{0:F0}"/>
-                              </StackPanel>
-                              <StackPanel Orientation="Horizontal">
-                                  <TextBlock Text="Generation time:"/>
-                                  <NumericUpDown Value="{Binding TimeOut}" Minimum="0" FormatString="{}{0:F0}"/>
-                              </StackPanel>
-                          </StackPanel>
-                      </DataTemplate>
-
-                      <DataTemplate DataType="vm_settings:BreweryItemSettingsViewModel">
-                          <TextBlock Text="WIP"/>
-                      </DataTemplate>
-
-                      <DataTemplate DataType="vm_settings:BrewerySpellsSettingsViewModel">
-                          <TextBlock Text="WIP"/>
-                      </DataTemplate>
-
-                      <DataTemplate DataType="vm_settings:BreweryClassesSettingsViewModel">
-                          <TextBlock Text="WIP"/>
-                      </DataTemplate>
-
-                  </ContentControl.DataTemplates>
-              </ContentControl>
+                 <views:EditorSettingsView/>
               </Border>
             </Flyout>
           </Button.Flyout>

@@ -3,10 +3,11 @@ using Avalonia.Markup.Xaml;
 
 namespace AIRPG.Features.Brewery.Editors;
 
-public partial class WorldEditorView : UserControl
+public partial class EditorSettingsView : UserControl
 {
-    public WorldEditorView()
+    public EditorSettingsView()
     {
         AvaloniaXamlLoader.Load(this);
     }
 }
+

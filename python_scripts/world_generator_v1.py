@@ -393,7 +393,7 @@ if __name__ == "__main__":
     parser.add_argument("--timeout", type=int, default=300, help="Maximum time (in seconds) to wait for an LLM response before aborting")
         
     args = parser.parse_args()
-
+    print(args.model)
     os.makedirs("Worlds/logs",exist_ok=True)
 
     main(args)

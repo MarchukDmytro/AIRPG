@@ -1,28 +1,24 @@
-using AIRPG.Core.ViewModels;
-using AIRPG.Core.Navigation;
-using AIRPG.Features.Brewery.Settings;
-using AIRPG.Features.Brewery.Editors;
-
-using System.Collections.ObjectModel;
-using ReactiveUI;
-using System.Diagnostics;
-using System.Reactive;
-using System.Threading.Tasks;
-using System.IO;
 using System;
+using System.IO;
+using ReactiveUI;
 using System.Text;
+using System.Reactive;
 using Avalonia.Threading;
+using System.Diagnostics;
+using System.Threading.Tasks;
+
+using AIRPG.Core.ViewModels;
+using AIRPG.Features.Brewery.Editors.Settings;
 
 namespace AIRPG.Features.Brewery.Editors.World;
 
-public class WorldCreateWorkAreaViewModel : ViewModelBase
-{
-    private ViewModelBase _currentSettings = new BreweryWorldSettingsViewModel();
-    
-    public ViewModelBase CurrentSettings
+public class WorldCreateViewModel : ViewModelBase, IEditorWorkSpaceViewModel{
+    private ViewModelBase _settings = new WorldCreateSettingsViewModel();
+
+    public ViewModelBase Settings
     {
-        get => _currentSettings;
-        set => this.RaiseAndSetIfChanged(ref _currentSettings, value);
+        get => _settings;
+        set => this.RaiseAndSetIfChanged(ref _settings, value);
     }
     private string _world_path = "world.md";
     private string _world_text = string.Empty;
@@ -52,7 +48,7 @@ public class WorldCreateWorkAreaViewModel : ViewModelBase
     private readonly object _generationLock = new();
     public ReactiveCommand<Unit, Unit> StartWorldGenerationCommand { get; }
     public ReactiveCommand<Unit, Unit> CancelWorldGenerationCommand { get; }
-    public WorldCreateWorkAreaViewModel()
+    public WorldCreateViewModel()
     {
         if (!File.Exists(_world_path))
         {
@@ -82,7 +78,8 @@ public class WorldCreateWorkAreaViewModel : ViewModelBase
         var result = await Task.Run(async () =>
         {
             var tcs = new TaskCompletionSource<bool>();
-            var worldSettings = CurrentSettings as BreweryWorldSettingsViewModel;
+            
+            WorldCreateSettingsViewModel GenSettings = Settings as WorldCreateSettingsViewModel ?? new WorldCreateSettingsViewModel(); // Fallback to default settings if cast fails
 
             var process = new Process
             {
@@ -90,10 +87,10 @@ public class WorldCreateWorkAreaViewModel : ViewModelBase
                 {
                     FileName = "python",
                     Arguments = $"\"{scriptPath}\" " +
-                          $"--model {worldSettings?.CurrentLLM} " +
+                          $"--model {GenSettings?.CurrentLLM} " +
                           $"--stream " +
-                          $"--critic_num {worldSettings?.Critics} " +
-                          $"--timeout {worldSettings?.TimeOut} " +
+                          $"--critic_num {GenSettings?.Critics} " +
+                          $"--timeout {GenSettings?.TimeOut} " +
                           $"--user_prompt \"{(UserPrompt ?? "").Replace("\"", "\\\"")}\"",
                     RedirectStandardError = true,
                     RedirectStandardOutput = true,
@@ -273,8 +270,36 @@ public class WorldCreateWorkAreaViewModel : ViewModelBase
 
 }
 
-public class WorldLoreWorkAreaViewModel : ViewModelBase{}
+public class WorldLoreViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+{
+    private ViewModelBase _settings = new WorldLoreSettingsViewModel();
 
-public class WorldAbstractWorkAreaViewModel : ViewModelBase{}
+    public ViewModelBase Settings
+    {
+        get => _settings;
+        set => this.RaiseAndSetIfChanged(ref _settings, value);
+    }
+}
 
-public class WorldMapWorkAreaViewModel : ViewModelBase{}
+public class WorldAbstractViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+
+{
+    private ViewModelBase _settings = new WorldAbstractSettingsViewModel();
+
+    public ViewModelBase Settings
+    {
+        get => _settings;
+        set => this.RaiseAndSetIfChanged(ref _settings, value);
+    }
+}
+
+public class WorldMapViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+{
+    private ViewModelBase _settings = new WorldMapSettingsViewModel();
+
+    public ViewModelBase Settings
+    {
+        get => _settings;
+        set => this.RaiseAndSetIfChanged(ref _settings, value);
+    }
+}

@@ -1,0 +1,51 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AIRPG.Features.Brewery.Editors.Settings"
+             xmlns:main_vm="using:AIRPG.Features.Brewery.Editors"
+             xmlns:bvm="using:AIRPG.Features.Brewery"
+             x:Class="AIRPG.Features.Brewery.Editors.EditorSettingsView"
+             x:DataType="bvm:BreweryViewModel">
+
+<ContentControl Content="{Binding CurrentTab.Workspace.Settings}">
+    <!-- World Setting Templates -->
+                  <ContentControl.DataTemplates>
+                    
+                      <DataTemplate DataType="vm:WorldCreateSettingsViewModel">
+                          <StackPanel Spacing="6">
+                              <ComboBox ItemsSource="{Binding LLMs}"
+                                        SelectedItem="{Binding CurrentLLM, Mode=TwoWay}"/>
+                              <StackPanel Orientation="Horizontal">
+                                  <TextBlock Text="Critics:"/>
+                                  <NumericUpDown Value="{Binding Critics}" Minimum="0" Maximum="10" FormatString="{}{0:F0}"/>
+                              </StackPanel>
+                              <StackPanel Orientation="Horizontal">
+                                  <TextBlock Text="Generation time:"/>
+                                  <NumericUpDown Value="{Binding TimeOut}" Minimum="0" FormatString="{}{0:F0}"/>
+                              </StackPanel>
+                          </StackPanel>
+                      </DataTemplate>
+
+                      <DataTemplate DataType="vm:WorldLoreSettingsViewModel">
+                          <TextBlock Text="WIP"/>
+                      </DataTemplate>
+
+                      <DataTemplate DataType="vm:WorldAbstractSettingsViewModel">
+                          <TextBlock Text="WIP"/>
+                      </DataTemplate>
+
+                      <DataTemplate DataType="vm:WorldMapSettingsViewModel">
+                          <TextBlock Text="WIP"/>
+                      </DataTemplate>
+
+<!-- Item Settings Templates -->
+                      <DataTemplate DataType="vm:ItemCreateSettingsViewModel">
+                          <StackPanel Spacing="6">
+                              <TextBlock Text="Item Create Settings WIP"/>
+                          </StackPanel>
+                      </DataTemplate>
+
+                  </ContentControl.DataTemplates>
+              </ContentControl>
+
+
+</UserControl>

@@ -19,18 +19,20 @@
 
   <Grid ColumnDefinitions="3*,10*,1.5*" Background="Green">
 
-    <ScrollViewer Grid.Column="0"/>
+    <ScrollViewer Grid.Column="0">
+      
+    </ScrollViewer>
 
     <!-- middle: each tab VM renders its own work area -->
-    <ContentControl Grid.Column="1" Content="{Binding CurrentTab}">
+    <ContentControl Grid.Column="1" Content="{Binding CurrentTab}"  Background="Purple">
       <ContentControl.DataTemplates>    
 
         <DataTemplate DataType="vm:WorldEditorViewModel">
-          <views:WorldEditorWorkAreaView/>
+          <views:WorldEditorView/>
         </DataTemplate>
 
         <DataTemplate DataType="vm:ItemEditorViewModel">
-          <TextBlock Text="WIP"/>
+          <views:ItemEditorView/>
         </DataTemplate>
 
         <DataTemplate DataType="vm:SpellEditorViewModel">
@@ -44,7 +46,7 @@
       </ContentControl.DataTemplates>
     </ContentControl>
 
-    <!-- right: buttons, same CurrentTab but different templates -->
+    <!-- right: buttons -->
     <Grid Grid.Column="2" RowDefinitions="*,Auto">
       <ContentControl Grid.Row="0" Content="{Binding CurrentTab}">
         <ContentControl.DataTemplates>
@@ -62,6 +64,7 @@
             <StackPanel>
               <Button Content="Create"   Classes="Buttons"  CommandParameter="Create"/>
               <Button Content="Image"   Classes="Buttons"  CommandParameter="Create"/>
+              <Button Content="Card View"   Classes="Buttons"  CommandParameter="Create"/>
             </StackPanel>
           </DataTemplate>
 
@@ -72,10 +75,25 @@
           <DataTemplate DataType="vm:ClassEditorViewModel">
             <TextBlock Text="WIP"/>
           </DataTemplate>
+          
+          </ContentControl.DataTemplates>
+  
+  
+  
+        </ContentControl>
+
+      <ContentControl Grid.Row="1" Content="{Binding CurrentTab.Workspace}">
+        <ContentControl.DataTemplates >
+          <DataTemplate DataType="vm:World.WorldCreateViewModel"> 
+            <StackPanel>
+              <Button Content="Start Generation"   Classes="Buttons" Command="{Binding StartWorldGenerationCommand}" Background="LightGreen"/>
+              <Button Content="Terminate Generation"   Classes="Buttons" Command="{Binding CancelWorldGenerationCommand}" Background="Red"/>
+            </StackPanel>
+          </DataTemplate>
 
         </ContentControl.DataTemplates>
       </ContentControl>
-
+          
       <ContentControl Grid.Row="1"/>
     </Grid>
 

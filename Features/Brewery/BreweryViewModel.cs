@@ -1,6 +1,6 @@
 using AIRPG.Core.ViewModels;
 using AIRPG.Core.Navigation;
-using AIRPG.Features.Brewery.Settings;
+using AIRPG.Features.Brewery.Editors.Settings;
 using AIRPG.Features.Brewery.Editors;
 
 using System.Collections.ObjectModel;
@@ -13,21 +13,14 @@ namespace AIRPG.Features.Brewery;
 public class BreweryViewModel : ViewModelBase
 {
 // FIELDS
-    private ViewModelBase _currentSettings = new BreweryWorldSettingsViewModel();
-    private ViewModelBase _currentTab = new WorldEditorViewModel();
+    private IBreweryTabViewModel  _currentTab = new WorldEditorViewModel();
     public ObservableCollection<string> Models { get; } = new ObservableCollection<string>();
 // PROPERTIES
-    public ViewModelBase CurrentSettings
-    {
-        get => _currentSettings;
-        set => this.RaiseAndSetIfChanged(ref _currentSettings, value);
-    }
-    public ViewModelBase CurrentTab
+    public IBreweryTabViewModel  CurrentTab
     {
         get => _currentTab;
         set{
             this.RaiseAndSetIfChanged(ref _currentTab, value);
-            UpdateCurrentSettings();
         }
     }
 
@@ -52,17 +45,5 @@ public class BreweryViewModel : ViewModelBase
                 _ => CurrentTab
             };
         });
-    }
-
-    private void UpdateCurrentSettings()
-    {
-        CurrentSettings = CurrentTab switch
-        {
-            WorldEditorViewModel => new BreweryWorldSettingsViewModel(),
-            ItemEditorViewModel => new BreweryItemSettingsViewModel(),
-            SpellEditorViewModel => new BrewerySpellsSettingsViewModel(),
-            ClassEditorViewModel => new BreweryClassesSettingsViewModel(),
-            _ => new BreweryWorldSettingsViewModel()
-        };
     }
 }
