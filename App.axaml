@@ -8,7 +8,9 @@
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
-  
+      <Application.Resources>
+        <local:FloorIntConverter x:Key="FloorIntConverter"/>
+    </Application.Resources>
     <Application.Styles>
         <FluentTheme />
     </Application.Styles>

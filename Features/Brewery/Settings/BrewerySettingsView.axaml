@@ -16,11 +16,11 @@
                                         SelectedItem="{Binding CurrentLLM, Mode=TwoWay}"/>
                               <StackPanel Orientation="Horizontal">
                                   <TextBlock Text="Critics:"/>
-                                  <NumericUpDown Value="{Binding Critics}" Minimum="0" Maximum="10" FormatString="{}{0:F0}"/>
+                                  <NumericUpDown Value="{Binding Critics, Converter={StaticResource FloorIntConverter}}" Minimum="0" Maximum="10" FormatString="{}{0:F0}"/>
                               </StackPanel>
                               <StackPanel Orientation="Horizontal">
                                   <TextBlock Text="Generation time:"/>
-                                  <NumericUpDown Value="{Binding TimeOut}" Minimum="0" FormatString="{}{0:F0}"/>
+                                  <NumericUpDown Value="{Binding TimeOut, Converter={StaticResource FloorIntConverter}}" Minimum="0" FormatString="{}{0:F0}"/>
                               </StackPanel>
                           </StackPanel>
                       </DataTemplate>

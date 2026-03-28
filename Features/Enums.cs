@@ -1,6 +1,11 @@
 using System;
-namespace AIRPG.Features.Brewery.Editors.Items;
 
+namespace AIRPG.Features;
+
+public enum Dice
+{
+    D4,D6,D8,D10,D12,D20,D100
+}
 
 
 public enum ArmorType
@@ -54,9 +59,28 @@ public enum WeaponProperty
     TwoHanded   = 1 << 8,  // 256
     Versatile   = 1 << 9   // 512
 }
-    public enum ItemType
-    {
-        None,
-        Weapon, 
-        Armor
+public enum ItemType
+{
+    Weapon, 
+    Armor
+}
+
+public readonly struct Damage
+{
+    public Damage(int diceNumber,Dice die, int flatDamage,DamageType type){
+        DiceNumber=diceNumber;
+        Die=die;
+        FlatDamage=flatDamage;
+        Type=type;
     }
+    public int DiceNumber { get; }
+    public int FlatDamage { get; }
+    public Dice Die { get;}
+    public DamageType Type { get;}
+}
+
+public enum WeaponType
+{
+    Melee,
+    Ranged
+}

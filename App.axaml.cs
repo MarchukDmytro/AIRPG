@@ -6,6 +6,10 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using AIRPG.ViewModels;
 using AIRPG.Views;
+using ReactiveUI;
+using System.Reactive;
+using System;
+using System.Diagnostics;
 
 namespace AIRPG;
 
@@ -14,6 +18,15 @@ public partial class App : Application
     public override void Initialize()
     {
         AvaloniaXamlLoader.Load(this);
+        // in App.axaml.cs constructor
+        RxApp.DefaultExceptionHandler = Observer.Create<Exception>(ex =>
+        {
+            Debug.WriteLine(ex);
+        });
+        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        {
+            Debug.WriteLine(e.ExceptionObject);
+        };
     }
 
     public override void OnFrameworkInitializationCompleted()
