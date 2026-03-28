@@ -3,6 +3,7 @@ using AIRPG.Features.Brewery.Editors.Settings;
 using DynamicData.Kernel;
 using ReactiveUI;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -13,40 +14,58 @@ namespace AIRPG.Features.Brewery.Editors.Items;
 public class ItemCreateViewModel : ViewModelBase, IEditorWorkSpaceViewModel
 { 
     // PRIVATE FIELDS
-    private string _name = string.Empty;
-    private string _source = "PHB";
-    private string _description = string.Empty;
-    private ItemType? _type = null;
+    private MetaItem _curentItem;
     private ViewModelBase _settings = new ItemCreateSettingsViewModel();
     private ObservableCollection<ViewModelBase> _secondaryProperties = new();
     // PUBLIC PROPERTIES
     public string Source
     {
-        get => _source;
-        set => this.RaiseAndSetIfChanged(ref _source,value);
+        get => _curentItem.Source;
+        set => this.RaiseAndSetIfChanged(ref _curentItem.Source, value);
+    }
+    public string Name
+    {
+        get => _curentItem.Name;
+        set => this.RaiseAndSetIfChanged(ref _curentItem.Name, value);
+    }
+        public double Value
+    {
+        get => _curentItem.Value;
+        set => this.RaiseAndSetIfChanged(ref _curentItem.Value, value);
+    }
+        public double Weight
+    {
+        get => _curentItem.Weight;
+        set => this.RaiseAndSetIfChanged(ref _curentItem.Weight, value);
+    }
+    public string Description
+    {
+        get => _curentItem.Description;
+        set => this.RaiseAndSetIfChanged(ref _curentItem.Description, value);
     }
     public ObservableCollection<ViewModelBase> SecondaryProperties
     {
         get => _secondaryProperties;
         set => this.RaiseAndSetIfChanged(ref _secondaryProperties,value);
     }
-    public string Name
-    {
-        get => _name;
-        set => this.RaiseAndSetIfChanged(ref _name, value);
-    }
-    public string Description
-    {
-        get => _description;
-        set => this.RaiseAndSetIfChanged(ref _description,value);
-    }
     public ItemType[] AllItemTypes => Enum.GetValues<ItemType>();
-    public ItemType? Type{
-        get => _type;
+    public ItemType Type{
+        get => _curentItem.ItemType;
         set
         {
-            if(_type != value) ShowSecondaryProperties(value);
-            this.RaiseAndSetIfChanged(ref _type, value);
+            if(_curentItem.ItemType != value)
+            {
+            _curentItem = value switch
+            {
+                ItemType.Weapon => new Weapon(),
+                ItemType.Armor => new Armor(),
+                _ =>   new MetaItem()
+            };
+            ShowSecondaryProperties();
+            }
+            this.RaiseAndSetIfChanged(ref _curentItem.ItemType, value);
+            _curentItem.Value = 0;
+            _curentItem.Weight = 0;
         }
     }
     public ViewModelBase Settings{
@@ -54,54 +73,60 @@ public class ItemCreateViewModel : ViewModelBase, IEditorWorkSpaceViewModel
         set => this.RaiseAndSetIfChanged(ref _settings, value);
     }
 
-    private void ShowSecondaryProperties(ItemType? itemType)
+    public ItemCreateViewModel(MetaItem itemState)
     {
-
-        IItem? item = itemType switch
-        {
-            ItemType.Weapon => new Weapon(),
-            ItemType.Armor => new Armor(),
-            _ =>  null 
-        };
-        if (item == null)
-        {
-            Description = $"Error, {itemType} is not in ChangeCurrentItem switch statment";
-            return;
-        }
+        _curentItem = itemState;
+        ShowSecondaryProperties();
+    }
+    private void ShowSecondaryProperties()
+    {
         SecondaryProperties.Clear();
-        var properties = item.GetType().GetProperties();
-
+        var properties = _curentItem.GetType().GetFields(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
+        
         ObservableCollection<ViewModelBase> DummySecondaryProperties = new();
 
-        foreach(PropertyInfo prop in properties)
+        foreach(FieldInfo prop in properties)
         {   
-            if (prop.Name == "Weight" || prop.Name == "Value")
+            var LocalProp = prop;
+            if (LocalProp.FieldType == typeof(int))
             {
-                continue;
+                DummySecondaryProperties.Add(new IntPropertyVM(LocalProp.Name,
+                                                                () => (int)LocalProp.GetValue(_curentItem)!,
+                                                                v =>  LocalProp.SetValue(_curentItem,v)));
             }
-            else if (prop.PropertyType == typeof(int))
+            else if (LocalProp.FieldType == typeof(double))
             {
-                DummySecondaryProperties.Add(new IntPropertyVM(prop));
+                DummySecondaryProperties.Add(new DoublePropertyVM(LocalProp.Name,
+                                                                () => (double)LocalProp.GetValue(_curentItem)!,
+                                                                v =>  LocalProp.SetValue(_curentItem,v)));
             }
-            else if (prop.PropertyType == typeof(double))
+            else if (LocalProp.FieldType == typeof(bool))
             {
-                DummySecondaryProperties.Add(new DoublePropertyVM(prop));
+                DummySecondaryProperties.Add(new BoolPropertyVM(LocalProp.Name,
+                                                                () => (bool)LocalProp.GetValue(_curentItem)!,
+                                                                v =>  LocalProp.SetValue(_curentItem,v)));
             }
-            else if (prop.PropertyType == typeof(bool))
+            else if (LocalProp.FieldType == typeof(List<Damage>))
             {
-                DummySecondaryProperties.Add(new BoolPropertyVM(prop));
+                DummySecondaryProperties.Add(new DamagePropertyVM(LocalProp.Name,
+                                                                () => (List<Damage>)LocalProp.GetValue(_curentItem)!,
+                                                                v =>  LocalProp.SetValue(_curentItem,v)));
             }
-            else if (prop.PropertyType == typeof(Damage))
+            else if (LocalProp.FieldType.IsEnum && !LocalProp.FieldType.IsDefined(typeof(FlagsAttribute), false))
             {
-                DummySecondaryProperties.Add(new DamagePropertyVM());
+                DummySecondaryProperties.Add(new EnumPropertyVM(LocalProp.Name,
+                                                                () => LocalProp.GetValue(_curentItem)!,
+                                                                v =>  LocalProp.SetValue(_curentItem,v),
+                                                                LocalProp.FieldType
+                                                                ));
             }
-            else if (prop.PropertyType.IsEnum && !prop.PropertyType.IsDefined(typeof(FlagsAttribute), false))
+            else if (LocalProp.FieldType.IsEnum && LocalProp.FieldType.IsDefined(typeof(FlagsAttribute), false))
             {
-                DummySecondaryProperties.Add(new EnumPropertyVM(prop));
-            }
-            else if (prop.PropertyType.IsEnum && prop.PropertyType.IsDefined(typeof(FlagsAttribute), false))
-            {
-                DummySecondaryProperties.Add(new EnumMultiplePropertiesVM(prop));
+                DummySecondaryProperties.Add(new EnumMultiplePropertiesVM(LocalProp.Name,
+                                                                () => LocalProp.GetValue(_curentItem)!,
+                                                                v =>  LocalProp.SetValue(_curentItem,v),
+                                                                LocalProp.FieldType
+                                                                ));
             }
 
         }
@@ -113,4 +138,14 @@ public class ItemCreateViewModel : ViewModelBase, IEditorWorkSpaceViewModel
             SecondaryProperties.Add(i);
     }
 
+}
+
+public class ItemImgViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+{
+    public ViewModelBase Settings { get; set; }
+}
+
+public class ItemCardViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+{
+    public ViewModelBase Settings { get; set; }
 }

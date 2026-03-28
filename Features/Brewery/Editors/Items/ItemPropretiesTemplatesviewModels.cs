@@ -7,209 +7,195 @@ using ReactiveUI;
 using System.ComponentModel;
 using System.Reactive;
 using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace AIRPG.Features.Brewery.Editors.Items;
 
-
-public class IntPropertyVM : ViewModelBase
+public class MetapropertyVM<T> : ViewModelBase
 {
     public string Name {get;} = string.Empty;
-    private int _property = 0;
-
-    public int Property
+    protected readonly Func<T> _get;
+    protected readonly Action<T> _set;
+    public virtual T Property
     {
-        get => _property;
-        set => this.RaiseAndSetIfChanged(ref _property,value);
+        get => _get();
+        set
+        {
+            _set(value);
+            this.RaisePropertyChanged();
+        }
     }
-        public IntPropertyVM(PropertyInfo info)
+    public MetapropertyVM(string name,Func<T> get,Action<T> set)
     {
-        Name = info.Name;
-    }
-}
-
-public class DoublePropertyVM : ViewModelBase
-{
-    public string Name {get;} = string.Empty;
-    private double _property = 0;
-    public double Property
-    {
-        get => _property;
-        set => this.RaiseAndSetIfChanged(ref _property, value);
-    }
-    public DoublePropertyVM(PropertyInfo info)
-    {
-        Name = info.Name;
+        _get = get;
+        _set = set;
+        Name=name;
     }
 }
-
-public class BoolPropertyVM : ViewModelBase
+public class IntPropertyVM : MetapropertyVM<int>
 {
-    public string Name {get;} = string.Empty;
-    private bool _property = false;
-    public bool Property
-    {
-        get => _property;
-        set => this.RaiseAndSetIfChanged(ref _property,value);
-    }
-    public BoolPropertyVM(PropertyInfo info)
-    {
-        Name = info.Name;
-    }
+        public IntPropertyVM(string name, Func<int> get, Action<int> set)
+        : base(name, get, set){}
 }
-
-public class EnumPropertyVM : ViewModelBase
+public class DoublePropertyVM : MetapropertyVM<double>
 {
-    public string Name { get; }
-    
-    public object Property { get; set; } 
-    
+    public DoublePropertyVM(string name, Func<double> get, Action<double> set)
+        : base(name, get, set){}
+}
+public class BoolPropertyVM : MetapropertyVM<bool>
+{
+    public BoolPropertyVM(string name, Func<bool> get, Action<bool> set)
+        : base(name,get, set){}
+}
+public class EnumPropertyVM : MetapropertyVM<object>
+{
     public Array Options { get; } 
-
-    public EnumPropertyVM(PropertyInfo info)
-    {
-        Name = info.Name;
-        
-        Options = Enum.GetValues(info.PropertyType);
+    public EnumPropertyVM(string name, Func<object> get, Action<object> set, Type PropertyType)
+        : base(name, get, set)
+    {        
+        Options = Enum.GetValues(PropertyType);
     }
 }
-
-public class EnumMultiplePropertiesVM : ViewModelBase
+public class EnumMultiplePropertiesVM :  MetapropertyVM<object>
 {
-    private readonly Type _enumType; // We save the type so we can convert it back later
+    private readonly Type _propertyType; // We save the type so we can convert it back later
 
-    public string Name { get; }
-    public ObservableCollection<PropertyOptionVM> Options { get; } = new();
+    public ObservableCollection<PropertyOptionVM> Options { get;} = new();
 
-    public EnumMultiplePropertiesVM(PropertyInfo info)
-    {
-        Name = info.Name;
-        _enumType = info.PropertyType;
-
+    public EnumMultiplePropertiesVM(string name, Func<object> get, Action<object> set, Type PropertyType)
+        : base(name, get, set){
+        _propertyType = PropertyType;
         // Get all values dynamically without <TEnum>
-        Array optionProps = Enum.GetValues(_enumType);
+        Array optionProps = Enum.GetValues(_propertyType);
         
+        long input = Convert.ToInt32(Property);
         foreach (object prop in optionProps)
         {
             // PRO TIP: Skip the "None = 0" flag so it doesn't create a useless CheckBox
-            if (Convert.ToInt64(prop) == 0) continue; 
+            long flag = Convert.ToInt32(prop);
+            if (flag == 0) continue; 
 
-            Options.Add(new PropertyOptionVM(prop));
+            PropertyOptionVM NewFlag  = new PropertyOptionVM(prop,get,set);
+            NewFlag.IsObtained = (input & flag) == flag;
+            Options.Add(NewFlag);
         }
     }
-
-    public object Value
+    public override object Property
     {
-        get
-        {
-            long result = 0;
-            foreach (var option in Options)
-            {
-                if (option.IsObtained)
-                {
-                    result |= Convert.ToInt64(option.Property);
-                }
-            }
-            // Use the saved _enumType to convert the number back to the Enum
-            return Enum.ToObject(_enumType, result); 
-        }
+        get => _get();
         set
         {
-            long input = Convert.ToInt64(value);
+            long input = Convert.ToInt32(value);
             foreach (var option in Options)
             {
-                long flag = Convert.ToInt64(option.Property);
+                long flag = Convert.ToInt32(option.Property);
                 // Safe check to see if the flag is inside the input
                 option.IsObtained = (input & flag) == flag; 
             }
+            _set(value);
+            this.RaisePropertyChanged();
+
         }
     }
+
     
 }
-public class PropertyOptionVM : ViewModelBase 
-    {
-        private bool _isObtained = false;
-        
-        public object Property { get; set; } // Stores the enum value (e.g., WeaponProperty.Light)
-        
-        // Added this so Avalonia has a clean string to show next to the CheckBox
-
-        public bool IsObtained
-        {
-            get => _isObtained;
-            set => this.RaiseAndSetIfChanged(ref _isObtained, value);
-        }
-
-        public PropertyOptionVM(object property)
-        {
-            Property = property;
-        }
-    }
-public class DamagePropertyVM : ViewModelBase
+public class DamagePropertyVM : MetapropertyVM<List<Damage>>
 {
     private ObservableCollection<DamageInstance> _damageInstances = new();
     public ReactiveCommand<Unit, Unit> AddDamageInstanceCommand {get;}
-    public ReactiveCommand<Unit, Unit> RemoveDamageInstanceCommand{get;}
     public ObservableCollection<DamageInstance> DamageInstances
     {
         get => _damageInstances;
         set => this.RaiseAndSetIfChanged(ref _damageInstances,value);
     }
-    public DamagePropertyVM(){
-        AddDamageInstanceCommand = ReactiveCommand.Create(() => 
-            {
-                try
-                {
-                    AddDamageInstance();
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
-            });
-        RemoveDamageInstanceCommand = ReactiveCommand.Create(() => RemoveDamageInstance());
+    public DamagePropertyVM(string name, Func<List<Damage>> get, Action<List<Damage>> set)
+        : base(name, get, set){
+        AddDamageInstanceCommand = ReactiveCommand.Create(() => AddDamageInstance());
     }
-    public void RemoveDamageInstance(){}
-    public void AddDamageInstance()
-    {Console.WriteLine("button cldwedwicked");
-        Debug.WriteLine("button clicked");
-        try
-                {
-                     DamageInstances.Add(new DamageInstance());
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                }
+    protected void Suicide(DamageInstance instance, Damage Element)
+    {
+        DamageInstances.Remove(instance);
+        Property.Remove(Element);
+    }
+    public void AddDamageInstance(){
+        var newDamage = new Damage();
+        Property.Add(newDamage);
+        DamageInstances.Add(new DamageInstance(newDamage,Suicide));
     }
     
+    
 }
+public class PropertyOptionVM : ViewModelBase 
+    {
+        private Func<object> _get; 
+        private Action<object> _set;
+        private bool _isObtained = false;
+        
+        public object Property { get;} 
+        
+        public bool IsObtained
+        {
+            get => _isObtained;
+            set {
+                if (value != _isObtained)
+                {
+                    int curentValue =  Convert.ToInt32(_get());
+                    int intproperty = Convert.ToInt32(Property);
+                    if (value)
+                    {
+                        _set(curentValue |= intproperty);
+                    }
+                    else
+                    {
+                        _set(curentValue &= ~intproperty);
+                    }
+                }
+                this.RaiseAndSetIfChanged(ref _isObtained, value);
+            }
+        }
+
+        public PropertyOptionVM(object property,Func<object> get, Action<object> set)
+        {
+            _get = get;
+            _set = set;
+            Property = property;
+        }
+    }
 public class DamageInstance : ViewModelBase
     {
-        private Dice _dice = Dice.D4;
-        private int _diceAmount = 0;
-        private int _flatDamage = 0;
-        private DamageType _damageType = DamageType.Blueberry;
+        private Damage damage;
         public Dice[] DiceOptions => Enum.GetValues<Dice>();
         public DamageType[] DamageTypes => Enum.GetValues<DamageType>();
         public Dice Die
         {
-            get => _dice;
-            set => this.RaiseAndSetIfChanged(ref _dice,value);
+            get => damage.Die;
+            set => this.RaiseAndSetIfChanged(ref  damage.Die, value);
         }
         public int DiceAmount
         {
-            get => _diceAmount;
-            set => this.RaiseAndSetIfChanged(ref _diceAmount,value);
+            get => damage.DiceAmount;
+            set => this.RaiseAndSetIfChanged(ref  damage.DiceAmount, value);
         }
         public int FlatDamage
         {
-            get => _flatDamage;
-            set => this.RaiseAndSetIfChanged(ref _flatDamage,value);
+            get => damage.FlatDamage;
+            set => this.RaiseAndSetIfChanged(ref  damage.FlatDamage, value);
+
         }
-        public DamageType TypeOfDamage
+        public DamageType TypeOfDamage{
+            get => damage.Type;
+            set => this.RaiseAndSetIfChanged(ref  damage.Type, value);
+
+        }
+        public ReactiveCommand<Unit, Unit> SuicideCommand {get;}
+
+        public DamageInstance(Damage _damage, Action<DamageInstance,Damage> suicide)
         {
-            get => _damageType;
-            set => this.RaiseAndSetIfChanged(ref _damageType,value);
+            SuicideCommand = ReactiveCommand.Create(() => suicide(this,_damage));
+            damage = _damage;
         }
+    
     }

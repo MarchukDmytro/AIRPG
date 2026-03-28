@@ -33,6 +33,9 @@ public class ViewLocator : IDataTemplate
 
     public bool Match(object? data)
     {
-        return data is ViewModelBase;
+        return data is ViewModelBase and not IDataTemplateOnly;
     }
 }
+
+public interface IDataTemplateOnly
+{}

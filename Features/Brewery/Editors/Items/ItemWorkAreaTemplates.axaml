@@ -18,30 +18,30 @@
                 <!-- Name under img -->
                     <TextBox Grid.Row="1" Text="{Binding Name}" Watermark="Name" TextAlignment="Center" BorderThickness="3" BorderBrush="Black"  HorizontalAlignment="Stretch" Background="Transparent" />
                 <!-- Properties -->
-                    <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Padding="5">
-                    <!-- Properties -->
-                        <Grid Grid.Row="0" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto,Auto,*,Auto" Margin="5" >
-                        <!-- Row 0: Value -->
-                            <Label Grid.Row="0" Grid.Column="0" Content="Value: " VerticalAlignment="Center"/>
-                            <NumericUpDown  Grid.Row="0" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
+                    <ScrollViewer  Grid.Row="3" Grid.ColumnSpan="2" VerticalScrollBarVisibility="Hidden">
+                        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="1" Padding="5">
+                        <!-- Properties -->
+                            <Grid Grid.Row="0" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto,Auto,*,Auto" Margin="5" >
+                            <!-- Row 0: Value -->
+                                <Label Grid.Row="0" Grid.Column="0" Content="Value: " VerticalAlignment="Center"/>
+                                <NumericUpDown  Grid.Row="0" Value="{Binding Value}" Grid.Column="1"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
 
-                        <!-- Row 1: Weight -->
-                            <Label Grid.Row="1" Grid.Column="0" Content="Weight: " VerticalAlignment="Center"/>
-                            <NumericUpDown  Grid.Row="1" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
+                            <!-- Row 1: Weight -->
+                                <Label Grid.Row="1" Grid.Column="0" Content="Weight: " VerticalAlignment="Center"/>
+                                <NumericUpDown  Grid.Row="1" Value="{Binding Weight}" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
 
-                        <!-- Row 2: Type -->
-                            <Label Grid.Row="2" Grid.Column="0" Content="Type: " VerticalAlignment="Center"/>
-                            <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,2"
-                            ItemsSource ="{Binding AllItemTypes}" PlaceholderText="None" SelectedItem="{Binding Type}"/>
-                        <!-- Row 3 Secondary Properties -->
-                            <ScrollViewer  Grid.Row="3" Grid.ColumnSpan="2">
-                                <ItemsControl  ItemsSource="{Binding SecondaryProperties}">
+                            <!-- Row 2: Type -->
+                                <Label Grid.Row="2" Grid.Column="0" Content="Type: " VerticalAlignment="Center"/>
+                                <ComboBox Grid.Row="2" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,2"
+                                ItemsSource ="{Binding AllItemTypes}" PlaceholderText="None" SelectedItem="{Binding Type}"/>
+                            <!-- Row 3 Secondary Properties -->
+                                <ItemsControl Grid.Row="3" Grid.ColumnSpan="2" ItemsSource="{Binding SecondaryProperties}">
 
-                                <ItemsControl.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <StackPanel/>
-                                    </ItemsPanelTemplate>
-                                </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel/>
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
 
 
                                     <ItemsControl.DataTemplates>
@@ -56,7 +56,7 @@
                                         <!-- IF DOUBLE -->
                                         <DataTemplate DataType="vm:DoublePropertyVM">
                                             <Grid ColumnDefinitions="Auto,*">
-                                                <Label Grid.Column="0" Content="{Binding Name, StringFormat='{}{0}: '}"/>  
+                                                <Label Grid.Column="0" Content="{Binding Name}"/>  
                                                 <NumericUpDown Grid.Column="1" Value="{Binding Property}" 
                                                 Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>  
                                             </Grid>
@@ -81,7 +81,7 @@
                                                     <Label Grid.Column="0" Grid.Row="0" Content="{Binding Name, StringFormat='{}{0}: '}"/>  
                                                     <Button Content="+" Grid.Column="1" Grid.Row="0">
                                                         <Button.Flyout>
-                                                            <Flyout>
+                                                            <Flyout  Placement="Right">
                                                                 <Border>
                                                                     <ItemsControl ItemsSource="{Binding Options}">
                                                                         <ItemsControl.ItemsPanel>
@@ -125,34 +125,36 @@
                                                 <ItemsControl Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding DamageInstances}">
                                                     <ItemsControl.DataTemplates>
                                                         <DataTemplate DataType="vm:DamageInstance">
-                                                            <StackPanel>
-                                                                <Grid ColumnDefinitions="Auto,Auto,Auto">
-                                                                    <NumericUpDown Grid.Column="0" VerticalAlignment="Center" Value="{Binding DiceAmount, Converter={StaticResource FloorIntConverter}}"
-                                                                    FormatString="{}{0:F0}"  ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
-                                                                    <ComboBox Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding DiceOptions}" PlaceholderText="None" SelectedItem="{Binding Die}"/>
-                                                                    <NumericUpDown Grid.Column="2" VerticalAlignment="Center" Value="{Binding FlatDamage, Converter={StaticResource FloorIntConverter}}"
-                                                                    FormatString="{}{0:+#;-#;0}" ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
+                                                            <Border BorderThickness="2" BorderBrush="Black" Margin="0,3,0,3">
+                                                                <Grid RowDefinitions="Auto,Auto">
+                                                                    <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,Auto,*">
+                                                                        <NumericUpDown Grid.Column="0" VerticalAlignment="Center" Value="{Binding DiceAmount, Converter={StaticResource FloorIntConverter}}"
+                                                                        FormatString="{}{0:F0}"  ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
+                                                                        <ComboBox Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding DiceOptions}" PlaceholderText="None" SelectedItem="{Binding Die}"/>
+                                                                        <NumericUpDown Grid.Column="2" VerticalAlignment="Center" Value="{Binding FlatDamage, Converter={StaticResource FloorIntConverter}}"
+                                                                        FormatString="{}{0:+#;-#;0}" ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
+                                                                        <Button Grid.Column="3" Content="❌" Command="{Binding SuicideCommand}"/>
+                                                                    </Grid>
+                                                                    <Grid Grid.Row="1" ColumnDefinitions="Auto,*">
+                                                                        <Label Grid.Column="0" Grid.Row="1" Content="Damage Type: "/>  
+                                                                        <ComboBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" ItemsSource="{Binding DamageTypes}" PlaceholderText="None" SelectedItem="{Binding TypeOfDamage}"/>
+                                                                    </Grid>
                                                                 </Grid>
-                                                                <Grid ColumnDefinitions="Auto,*">
-                                                                    <Label Grid.Column="0" Grid.Row="1" Content="Damage Type: "/>  
-                                                                    <ComboBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" ItemsSource="{Binding DamageTypes}" PlaceholderText="None" SelectedItem="{Binding TypeOfDamage}"/>
-                                                                </Grid>
-                                                            </StackPanel>
+                                                            </Border>
 
                                                         </DataTemplate>
                                                     </ItemsControl.DataTemplates>
                                                 </ItemsControl>
                                             </Grid>
                                         </DataTemplate>   
-
                                     </ItemsControl.DataTemplates>
                                 </ItemsControl>
-                            </ScrollViewer>
-                            <!-- Row 4 Sourse -->
-                            <Label Grid.Row="4" Grid.Column="0" Content="Source: " VerticalAlignment="Center"/>
-                            <TextBox Text="{Binding Source}" Grid.Row="4"  Grid.Column="1" AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"/>
-                        </Grid>
-                </Border>
+                                <!-- Row 4 Sourse -->
+                                <Label Grid.Row="4" Grid.Column="0" Content="Source: " VerticalAlignment="Center"/>
+                                <TextBox Text="{Binding Source}" Grid.Row="4"  Grid.Column="1" AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap"/>
+                            </Grid>
+                    </Border>
+                    </ScrollViewer>
             </Grid>
                 </Border>
 <!-- Description -->

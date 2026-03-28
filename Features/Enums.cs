@@ -65,18 +65,12 @@ public enum ItemType
     Armor
 }
 
-public readonly struct Damage
+public class Damage
 {
-    public Damage(int diceNumber,Dice die, int flatDamage,DamageType type){
-        DiceNumber=diceNumber;
-        Die=die;
-        FlatDamage=flatDamage;
-        Type=type;
-    }
-    public int DiceNumber { get; }
-    public int FlatDamage { get; }
-    public Dice Die { get;}
-    public DamageType Type { get;}
+    public int DiceAmount = 0;
+    public int FlatDamage = 0;
+    public Dice Die = Dice.D4;
+    public DamageType Type = DamageType.Blueberry;
 }
 
 public enum WeaponType

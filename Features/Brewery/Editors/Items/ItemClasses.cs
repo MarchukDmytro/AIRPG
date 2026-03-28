@@ -1,42 +1,46 @@
 
+using System;
+using System.Collections.Generic;
+
 namespace AIRPG.Features.Brewery.Editors.Items;
 
-public interface IItem
+public class MetaItem
 {
-    public string Name { get; set; }
-    public double Weight { get; set; }
-    public double Value { get; set; }   
-    public string Description { get; set; }
+    public string Name = string.Empty;
+    public double Weight = 0;
+    public double Value = 0;
+    public string Description = string.Empty;
+    public string Source = "PHB";
+    public ItemType ItemType;
+    public int itemID = 0;
+    public string  MyType;
+
+    public MetaItem()
+    {
+        MyType = GetType().AssemblyQualifiedName!;
+    }
 
 }
 
-public class Weapon : IItem
+public class Weapon : MetaItem
 {
-    public string Name { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
-    public Damage Damage {get;set;} 
-    public double Weight { get; set; } = 0;
-    public double Value { get; set; } = 0;
-    public int Range {get;set;}= 0;
-    public int MaxRange {get;set;}= 0;
-    public WeaponCategory Category {get;set;} = WeaponCategory.Simple;
-    public WeaponProperty Properties{get;set;} = WeaponProperty.None;
-    public  MasteryProperty Mastery{get;set;} = MasteryProperty.None;
-    public WeaponType Type {get;set;} = WeaponType.Melee;
+    public List<Damage> Damage = new(); 
+    public int Range = 0;
+    public int MaxRange= 0;
+    public WeaponCategory Category = WeaponCategory.Simple;
+    public WeaponProperty Properties = WeaponProperty.None;
+    public  MasteryProperty Mastery = MasteryProperty.None;
+    public WeaponType Type  = WeaponType.Melee;
 
 
 }
 
-public class Armor : IItem
+public class Armor : MetaItem
 {
-    public string Name { get; set; } = string.Empty;
-    public double Weight { get; set; } = 0;
-    public double Value { get; set; } = 0;
-    public string Description { get; set; } = string.Empty;
-    public int AC { get; set; } = 0;
-    public bool Disadvantage{ get; set; }  = false;
-    public ArmorType Type{get;set;} = ArmorType.Light;
-    public int Strength{get;set;} = 0;
-    public int PutOn{get;set;} = 0;
-    public int TakeOff{get;set;} = 0; 
+    public int AC = 0;
+    public bool Disadvantage  = false;
+    public ArmorType Type = ArmorType.Light;
+    public int Strength = 0;
+    public int PutOn = 0;
+    public int TakeOff = 0; 
 }

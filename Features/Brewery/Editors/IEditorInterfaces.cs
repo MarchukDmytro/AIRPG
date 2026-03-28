@@ -22,7 +22,6 @@ public class PlaceholderViewModel : ViewModelBase, IEditorWorkSpaceViewModel
 }
 public interface IBreweryTabViewModel
 {
-    public ObservableCollection<string> EntityList { get; }
     public IEditorWorkSpaceViewModel Workspace { get; set; }
     public ReactiveCommand<string, Unit> SetCurrentWorkTabCommand { get; }
 }
