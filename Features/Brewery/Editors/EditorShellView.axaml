@@ -1,0 +1,134 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:items="using:AIRPG.Features.Brewery.Editors.Items"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:AIRPG.Features.Brewery.Editors"
+             xmlns:views="using:AIRPG.Features.Brewery.Editors"
+             xmlns:main_vm="using:AIRPG.Features.Brewery"
+             x:Class="AIRPG.Features.Brewery.Editors.EditorShellView"
+             x:DataType="main_vm:BreweryViewModel">
+
+  <UserControl.Styles>
+    <Style Selector="Button.Buttons">
+      <Setter Property="Margin" Value="3"/>
+      <Setter Property="Background" Value="DarkGray"/>
+      <Setter Property="HorizontalAlignment" Value="Stretch"/>
+      <Setter Property="VerticalAlignment" Value="Stretch"/>
+      <Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="VerticalContentAlignment" Value="Center"/>
+    </Style>
+  </UserControl.Styles>
+
+
+  
+  <ContentControl Content="{Binding CurrentTab}">
+    <ContentControl.DataTemplates>
+
+      <DataTemplate DataType="vm:WorldEditorViewModel">
+        <Grid ColumnDefinitions="3*,10*,1.5*" Background="Green">
+        
+          <views:WorldEditorWorkAreaView Grid.Column="1"/>
+
+          <Grid Grid.Column="2" RowDefinitions="*,Auto">
+            <StackPanel>
+              <Button Content="Create"   Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Create"/>
+              <Button Content="Lore"     Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Lore"/>
+              <Button Content="Abstract" Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Abstract"/>
+              <Button Content="Map"      Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Map"/>
+            </StackPanel>
+
+            <ContentControl Grid.Row="1" Content="{Binding Workspace}">
+              <ContentControl.DataTemplates >
+                <DataTemplate DataType="vm:World.WorldCreateViewModel"> 
+                  <StackPanel>
+                    <Button Content="Start Generation"   Classes="Buttons" Command="{Binding StartWorldGenerationCommand}" Background="LightGreen"/>
+                    <Button Content="Terminate Generation"   Classes="Buttons" Command="{Binding CancelWorldGenerationCommand}" Background="Red"/>
+                  </StackPanel>
+                </DataTemplate>
+                  <DataTemplate DataType="vm:World.WorldCreateViewModel"> 
+                </DataTemplate>
+
+                <DataTemplate DataType="vm:World.WorldLoreViewModel">
+                </DataTemplate>
+
+          
+                <DataTemplate DataType="vm:World.WorldMapViewModel">
+                </DataTemplate>      
+        
+              </ContentControl.DataTemplates>
+            </ContentControl>
+
+          </Grid>
+        </Grid>
+      </DataTemplate>
+
+      <DataTemplate DataType="vm:ItemEditorViewModel" >
+        <Grid ColumnDefinitions="3*,10*,1.5*" Background="Green">
+
+          <Grid  RowDefinitions="*,Auto" Grid.Column="0">
+            <ListBox  ItemsSource="{Binding EntityList}" SelectedItem="{Binding CurrentEntity}">
+              <ListBox.ItemTemplate>
+                <DataTemplate  DataType="vm:EntityVM">
+                  <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="*,Auto">
+                      <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Name}" FontSize="24" FontWeight="Bold" VerticalAlignment="Bottom"/>
+                      <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding ID, StringFormat='ID: {0}'}" FontSize="12" Opacity="0.7"/>
+                      <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Black" Width="48" Height="48">
+                          <Image Source="{Binding Image}" Stretch="UniformToFill"/>
+                      </Border>
+                      <Button Grid.Column="2" Grid.RowSpan="2" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Center"
+                          Width="{Binding $self.Bounds.Height}" Content="❌" Command="{Binding $parent[ListBox].((vm:ItemEditorViewModel)DataContext).DeleteItemCommand}" 
+                            CommandParameter="{Binding}"/>
+                  </Grid>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+            <Button Grid.Row="1" Content="✚" Command="{Binding CreateNewItemCommand}" HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="LightGreen" Margin="5"/>
+          </Grid>
+
+          <views:ItemEditorView  Grid.Column="1" Background="Green" />
+
+          <Grid Grid.Column="2" RowDefinitions="*,Auto">
+              <StackPanel>
+                <Button Content="Create"    Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Create"/>
+                <Button Content="Image"     Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Image"/>
+                <Button Content="Card View" Classes="Buttons" Command="{Binding SetCurrentWorkTabCommand}" CommandParameter="Card"/>
+                <Button Content="Save Item" Classes="Buttons" Command="{Binding SaveCommand}" Background="Green" VerticalAlignment="Bottom"/>
+              </StackPanel>
+
+
+            <ContentControl Grid.Row="1" Content="{Binding Workspace}">
+              <ContentControl.DataTemplates >
+
+                <DataTemplate DataType="vm:Items.ItemWorkAreaCreateViewModel"> 
+                  <StackPanel>
+                    <Button Content="Save" HorizontalContentAlignment="Center" HorizontalAlignment="Stretch"  
+                    Classes="Buttons" Command="{Binding SaveCommand }" Background="DarkGreen"/>
+                  </StackPanel>
+                </DataTemplate>
+
+                <DataTemplate DataType="vm:Items.ItemWorkAreaImageViewModel">
+                </DataTemplate>
+   
+        
+              </ContentControl.DataTemplates>
+            </ContentControl>
+
+          </Grid>
+        </Grid>
+
+          </DataTemplate>
+
+      <DataTemplate DataType="vm:SpellEditorViewModel">
+        <TextBlock Text="WIP"/>
+      </DataTemplate>
+
+      <DataTemplate DataType="vm:ClassEditorViewModel">
+        <TextBlock Text="WIP"/>
+      </DataTemplate>
+
+    </ContentControl.DataTemplates>
+
+  </ContentControl>
+    
+
+
+</UserControl>

@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:vm="using:AIRPG.Features.Brewery.Editors.World"
              xmlns:main_vm="using:AIRPG.Features.Brewery.Editors"
-             x:Class="AIRPG.Features.Brewery.Editors.WorldEditorView"
+             x:Class="AIRPG.Features.Brewery.Editors.WorldEditorWorkAreaView"
              x:DataType="main_vm:WorldEditorViewModel">
 
 <UserControl.DataTemplates>

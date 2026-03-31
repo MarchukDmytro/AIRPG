@@ -3,9 +3,9 @@ using Avalonia.Markup.Xaml;
 
 namespace AIRPG.Features.Brewery.Editors;
 
-public partial class WorldEditorView : UserControl
+public partial class WorldEditorWorkAreaView : UserControl
 {
-    public WorldEditorView()
+    public WorldEditorWorkAreaView()
     {
         AvaloniaXamlLoader.Load(this);
     }

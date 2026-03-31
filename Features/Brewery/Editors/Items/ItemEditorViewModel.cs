@@ -14,26 +14,28 @@ namespace AIRPG.Features.Brewery.Editors;
 
 public class ItemEditorViewModel : ViewModelBase, IBreweryTabViewModel
 {
-    private IEditorWorkSpaceViewModel _workspace;
     private  string itemPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Items");
-    private EntityVM _curentEntity;
+
+    private ViewModelBase _workspace;
+    private EntityVM? _currentEntity;
     private MetaItem _itemState;
-    public EntityVM CurentEntity
+
+    public EntityVM? CurrentEntity
     {
-        get => _curentEntity;
+        get => _currentEntity;
         set
         {
-            if (_curentEntity != value)
+            if (_currentEntity != value && value != null)
             {
-                loadItem(value);
+                Save();
+                LoadItem(value);
             }
-            this.RaiseAndSetIfChanged(ref _curentEntity,value);
+            this.RaiseAndSetIfChanged(ref _currentEntity,value);
         }
             
     }
     public ObservableCollection<EntityVM> EntityList { get; set;} = new();
-    public IEditorWorkSpaceViewModel Workspace { get => _workspace; set => this.RaiseAndSetIfChanged(ref _workspace, value); }
-
+    public ViewModelBase Workspace { get => _workspace; set => this.RaiseAndSetIfChanged(ref _workspace, value); }
     public ReactiveCommand<string, Unit> SetCurrentWorkTabCommand { get; }
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
     public ReactiveCommand<Unit, Unit> CreateNewItemCommand { get; }
@@ -49,126 +51,110 @@ public class ItemEditorViewModel : ViewModelBase, IBreweryTabViewModel
         {
             Workspace = workTab switch
             {
-                "Create" => new ItemCreateViewModel(_itemState), 
-                "Image" => new ItemImgViewModel(),
-                "Card" => new ItemCardViewModel(),
-                _ =>  new ItemCreateViewModel(_itemState)
+                "Create" => new ItemWorkAreaCreateViewModel(new WeaponData()), 
+                "Image" => new ItemWorkAreaImageViewModel(),
+                _ =>  new ItemWorkAreaCreateViewModel(new WeaponData())
             };
         });
+
         SaveCommand = ReactiveCommand.Create(() => Save());
         CreateNewItemCommand = ReactiveCommand.Create(() => CreateNewItem());
         DeleteItemCommand = ReactiveCommand.Create<EntityVM>(DeleteItem);
 
         LoadItems();
-        if (EntityList.Count == 0)
-        {
-            CreateNewItem();
-        }
+
     }
 
     private void CreateNewItem()
     {
-        _itemState = new Weapon();
-        Workspace = new ItemCreateViewModel(_itemState);
-        // _curentEntity = new EntityVM(name:_itemState.Name,
-        // id: _itemState.itemID,
-        // imagePath: Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "item_placeholder.png"));
+        if (CurrentEntity != null && _itemState != null) Save();
+
+        _itemState = Activator.CreateInstance( _itemState?.GetType() ?? typeof(WeaponData)) as MetaItem ?? new WeaponData();
+
+        Workspace = new ItemWorkAreaCreateViewModel(_itemState);
+
+        _currentEntity = new EntityVM(_itemState);
+
+        EntityList.Add(CurrentEntity!);
     }
     private void Save()
     {
-        HashSet<int> existingIDs = Directory.GetFiles(itemPath, "*.json", SearchOption.AllDirectories)
-            .Select(file => JsonSerializer.Deserialize<MetaItem>(File.ReadAllText(file), new JsonSerializerOptions { WriteIndented = true, IncludeFields = true }))
-            .Where(item => item != null)
-            .Select(item => item!.itemID)
-            .ToHashSet();
-
-        Random rng = new();
-        int newID;
-        do { newID = rng.Next(0, int.MaxValue); } 
-        while (existingIDs.Contains(newID));
-        string safeName = string.Concat(_itemState.Name
-        .Where(c => !Path.GetInvalidFileNameChars().Contains(c)))
-        .Trim();
-        _itemState.itemID = newID;
-        string newFolder = Path.Combine(itemPath, $"{safeName}_{newID}");
-        Directory.CreateDirectory(newFolder);
-        _itemState.MyType = _itemState.GetType().AssemblyQualifiedName!;
-        string json = JsonSerializer.Serialize(_itemState, _itemState.GetType(), new JsonSerializerOptions { WriteIndented = true, IncludeFields = true });
-
-        File.WriteAllText(Path.Combine(newFolder, $"{safeName}_{newID}.json"), json);
-        EntityList.Add(new EntityVM(
-                name: _itemState.Name,
-                id: newID,
-                imagePath: Path.Combine(itemPath, $"{safeName}_{newID}", $"{safeName}_{newID}")
-            ));;
-        CurentEntity = EntityList.Last();
+        string json = JsonSerializer.Serialize(_itemState, new JsonSerializerOptions { WriteIndented = true});
+        File.WriteAllText(Path.Combine(itemPath,$"{_itemState.ItemID}.json"), json);
+        if (_currentEntity != null) _currentEntity!.Name = _itemState.Name; 
     }
     private void LoadItems()
     {
         EntityList.Clear();
+
         var items = Directory.GetFiles(itemPath, "*.json", SearchOption.AllDirectories)
-            .Select(file => JsonSerializer.Deserialize<MetaItem>(File.ReadAllText(file), new JsonSerializerOptions { WriteIndented = true, IncludeFields = true }))
+            .Select(file => JsonSerializer.Deserialize<MetaItem>(File.ReadAllText(file), new JsonSerializerOptions {IncludeFields = true }))
             .Where(item => item != null)
             .Select(item => item!);
 
         foreach (var item in items)
         {
-            EntityList.Add(new EntityVM(
-                name: item.Name,
-                id: item.itemID,
-                imagePath: Path.Combine(itemPath, $"{item.Name}_{item.itemID}", $"{item.Name}_{item.itemID}")
-            ));
+            EntityList.Add(new EntityVM(item));
         }
-
     }
     private void DeleteItem(EntityVM item)
     {
-        string itemFolder = Path.Combine(itemPath, $"{item.Name}_{item.ID}");
-        if (Directory.Exists(itemFolder))
+        string IPath = Path.Combine(itemPath, $"{item.ID}.json");
+        if (File.Exists(IPath))
         {
-            Directory.Delete(itemFolder, true);
+            File.Delete(IPath);
             EntityList.Remove(item);
         }
     }
-    private void loadItem(EntityVM Item)
+    private void LoadItem(EntityVM Item)
     {
-    if (File.Exists(Item.jsonPath))
-    {
-        string json = File.ReadAllText(Item.jsonPath);
-        var meta = JsonSerializer.Deserialize<MetaItem>(json, new JsonSerializerOptions { WriteIndented = true,  IncludeFields = true });
-        Type type = Type.GetType(meta!.MyType) ?? typeof(Weapon);
-        _itemState = (MetaItem)JsonSerializer.Deserialize(json, type, new JsonSerializerOptions {  WriteIndented = true, IncludeFields = true })!;
-        Workspace = new ItemCreateViewModel(_itemState);
-    }
-         else
+        if (File.Exists(Item.jsonPath))
         {
-            CreateNewItem();
-            _itemState.Description = "This item was not found. It may have been deleted or moved. You can edit this placeholder item and save it to create a new item.";
+            string json = File.ReadAllText(Item.jsonPath);
+            _itemState = JsonSerializer.Deserialize<MetaItem>(json, new JsonSerializerOptions {WriteIndented = true})!;
+            Workspace = new ItemWorkAreaCreateViewModel(_itemState);
+        }
+        else
+        {
+            _itemState = new WeaponData
+            {
+                ItemID = Item.ID,
+                Description = _itemState.Description = "This item was not found. It may have been deleted or moved. You can edit this placeholder item and save it to create a new item."
+            };
+            Workspace = new ItemWorkAreaCreateViewModel(_itemState);
         }
     }
 }
 
 public class EntityVM : ViewModelBase,IDataTemplateOnly
 {
-    public string Name { get; set; }
-    public int ID { get; }
-    public string jsonPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Items", $"{Name}_{ID}", $"{Name}_{ID}.json");
+    private string _name;
+    private int _id;
+    public string Name{
+    get => _name;
+    set
+        {
+            this.RaiseAndSetIfChanged(ref _name,value);
+        }
+    }
+    public int ID {
+    get => _id;
+    set
+        {
+            this.RaiseAndSetIfChanged(ref _id,value);
+        }
+    }
+    public string jsonPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "Items", $"{ID}.json");
     private Bitmap? _image;
     public Bitmap? Image
     {
         get => _image;
         set => this.RaiseAndSetIfChanged(ref _image, value);
     }
-    public EntityVM(string name, int id,string imagePath)
+    public EntityVM( MetaItem ItemState)
     {
-        string[] supportedExtensions = { ".png", ".jpg", ".jpeg", ".bmp", ".gif", ".webp" };
-
-        string? foundImage = supportedExtensions
-            .Select(ext => imagePath + ext)
-            .FirstOrDefault(File.Exists);
-        Name = name;
-        ID = id;
-        var ImagePath = foundImage ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "item_placeholder.png");
-        Image = new Bitmap(ImagePath);
+        Name = ItemState.Name;
+        ID = ItemState.ItemID;
+        Image = ItemState.ItemImage;
     }
 }

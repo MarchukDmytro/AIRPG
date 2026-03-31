@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 
 namespace AIRPG.Features.Brewery.Editors;
 
-public class PlaceholderViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+public class PlaceholderViewModel : ViewModelBase
 {
     public ViewModelBase Settings { get; set; }
 
@@ -22,11 +22,5 @@ public class PlaceholderViewModel : ViewModelBase, IEditorWorkSpaceViewModel
 }
 public interface IBreweryTabViewModel
 {
-    public IEditorWorkSpaceViewModel Workspace { get; set; }
     public ReactiveCommand<string, Unit> SetCurrentWorkTabCommand { get; }
-}
-
-public interface IEditorWorkSpaceViewModel
-{
-    public ViewModelBase Settings { get; set; }
 }

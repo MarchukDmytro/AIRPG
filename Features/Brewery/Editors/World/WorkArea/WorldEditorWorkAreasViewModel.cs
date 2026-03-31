@@ -12,7 +12,7 @@ using AIRPG.Features.Brewery.Editors.Settings;
 
 namespace AIRPG.Features.Brewery.Editors.World;
 
-public class WorldCreateViewModel : ViewModelBase, IEditorWorkSpaceViewModel{
+public class WorldCreateViewModel : ViewModelBase{
     private ViewModelBase _settings = new WorldCreateSettingsViewModel();
 
     public ViewModelBase Settings
@@ -185,7 +185,7 @@ public class WorldCreateViewModel : ViewModelBase, IEditorWorkSpaceViewModel{
             await tcs.Task;
 
             // 2. WAIT FOR STREAMS TO FINISH READING
-            await Task.WhenAll(stdoutTask, stdoutTask);
+            await Task.WhenAll(stdoutTask, Task.Run(() => process.WaitForExit()));
 
             // 3. CAPTURE EXIT CODE NOW (Process is done, but object is open)
             int finalExitCode = process.ExitCode;
@@ -270,7 +270,7 @@ public class WorldCreateViewModel : ViewModelBase, IEditorWorkSpaceViewModel{
 
 }
 
-public class WorldLoreViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+public class WorldLoreViewModel : ViewModelBase
 {
     private ViewModelBase _settings = new WorldLoreSettingsViewModel();
 
@@ -281,7 +281,7 @@ public class WorldLoreViewModel : ViewModelBase, IEditorWorkSpaceViewModel
     }
 }
 
-public class WorldAbstractViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+public class WorldAbstractViewModel : ViewModelBase
 
 {
     private ViewModelBase _settings = new WorldAbstractSettingsViewModel();
@@ -293,7 +293,7 @@ public class WorldAbstractViewModel : ViewModelBase, IEditorWorkSpaceViewModel
     }
 }
 
-public class WorldMapViewModel : ViewModelBase, IEditorWorkSpaceViewModel
+public class WorldMapViewModel : ViewModelBase
 {
     private ViewModelBase _settings = new WorldMapSettingsViewModel();
 

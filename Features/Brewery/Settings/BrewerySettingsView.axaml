@@ -6,9 +6,9 @@
              x:Class="AIRPG.Features.Brewery.Editors.EditorSettingsView"
              x:DataType="bvm:BreweryViewModel">
 
-<ContentControl Content="{Binding CurrentTab.Workspace.Settings}">
+<!-- <ContentControl Content="{Binding CurrentTab.Workspace.Settings}"> -->
     <!-- World Setting Templates -->
-                  <ContentControl.DataTemplates>
+                  <!-- <ContentControl.DataTemplates>
                     
                       <DataTemplate DataType="vm:WorldCreateSettingsViewModel">
                           <StackPanel Spacing="6">
@@ -35,17 +35,17 @@
 
                       <DataTemplate DataType="vm:WorldMapSettingsViewModel">
                           <TextBlock Text="WIP"/>
-                      </DataTemplate>
+                      </DataTemplate> -->
 
 <!-- Item Settings Templates -->
-                      <DataTemplate DataType="vm:ItemCreateSettingsViewModel">
+                      <!-- <DataTemplate DataType="vm:ItemCreateSettingsViewModel">
                           <StackPanel Spacing="6">
                               <TextBlock Text="Item Create Settings WIP"/>
                           </StackPanel>
                       </DataTemplate>
 
                   </ContentControl.DataTemplates>
-              </ContentControl>
+              </ContentControl> -->
 
 
 </UserControl>

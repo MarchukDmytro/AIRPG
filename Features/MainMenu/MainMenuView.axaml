@@ -14,7 +14,8 @@
     <StackPanel Grid.Row="1" 
                 Grid.Column="1" 
                 Spacing="10"
-                VerticalAlignment="Center">
+                VerticalAlignment="Center"
+                MinWidth="150">
         
         <Button Content="Campaign"
                 Command="{Binding OpenCampaignMenuCommand}"

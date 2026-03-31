@@ -2,11 +2,50 @@ using System;
 
 namespace AIRPG.Features;
 
+public class EnumArrays
+{
+
+     static EnumArrays? _instance;
+    public static EnumArrays Instance => _instance ??= new EnumArrays();
+    public Array GetDice
+    {
+        get => Enum.GetValues(typeof(Dice));
+    }
+    public Array ArmorType
+    {
+        get => Enum.GetValues(typeof(ArmorType));
+    }
+    public Array DamageType
+    {
+        get => Enum.GetValues(typeof(DamageType));
+    }
+    public Array WeaponCategory
+    {
+        get => Enum.GetValues(typeof(WeaponCategory));
+    }
+    public Array MasteryProperty
+    {
+        get => Enum.GetValues(typeof(MasteryProperty));
+    }
+    public Array WeaponProperties
+    {
+        get => Enum.GetValues(typeof(WeaponProperties));
+    }
+    public Array ItemType
+    {
+        get => Enum.GetValues(typeof(ItemType));
+    }
+    public Array WeaponType
+    {
+        get => Enum.GetValues(typeof(WeaponType));
+    }
+
+}
+
 public enum Dice
 {
     D4,D6,D8,D10,D12,D20,D100
 }
-
 
 public enum ArmorType
 {
@@ -43,9 +82,8 @@ public enum MasteryProperty
     Vex
 }
 
-
 [Flags]
-public enum WeaponProperty
+public enum WeaponProperties
 {
     None        = 0,
     Ammunition  = 1 << 0,  // 1
@@ -63,14 +101,6 @@ public enum ItemType
 {
     Weapon, 
     Armor
-}
-
-public class Damage
-{
-    public int DiceAmount = 0;
-    public int FlatDamage = 0;
-    public Dice Die = Dice.D4;
-    public DamageType Type = DamageType.Blueberry;
 }
 
 public enum WeaponType

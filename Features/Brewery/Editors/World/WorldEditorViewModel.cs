@@ -11,10 +11,10 @@ public class WorldEditorViewModel : ViewModelBase, IBreweryTabViewModel
 {
     public ObservableCollection<string> EntityList { get; } = new();
 
-    private IEditorWorkSpaceViewModel _workspace = new WorldCreateViewModel();
+    private ViewModelBase _workspace = new WorldCreateViewModel();
 
 
-    public IEditorWorkSpaceViewModel Workspace
+    public ViewModelBase Workspace
     {
         get => _workspace;
         set => this.RaiseAndSetIfChanged(ref _workspace, value);
