@@ -6,41 +6,39 @@ using AIRPG.Core.IDGenerationService;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform;
 using System.Text.Json.Serialization;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AIRPG.Features;
 
-[JsonPolymorphic(TypeDiscriminatorPropertyName = "$type")]
-[JsonDerivedType(typeof(WeaponData), "Weapon")]
-[JsonDerivedType(typeof(ArmorData), "Armor")]
 public abstract class MetaItem
 {
+    private Bitmap? _itemImage;
+
+    [NotMapped]
     public Bitmap? ItemImage
     {
         get
         {
-            if (!string.IsNullOrWhiteSpace(ImgPath)&& File.Exists(ImgPath))
-            {
-                Console.WriteLine($"Loading image from path: {ImgPath}");
-                return new Bitmap(ImgPath);
-            }
+            if (_itemImage != null) return _itemImage;
+
+            if (!string.IsNullOrWhiteSpace(ImgPath) && File.Exists(ImgPath))
+                _itemImage = new Bitmap(ImgPath);
             else
-            {
-                return  new Bitmap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "item_placeholder.png"));
-            }
+                _itemImage = new Bitmap(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "item_placeholder.png"));
+
+            return _itemImage;
         }
     }
-    public string ImgPath {get;set;}  = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Assets", "item_placeholder.png");
+    public string ImgPath {get;set;}  = string.Empty;
     public string Name {get;set;} = string.Empty;
     public double Weight {get;set;} = 0;
     public double Value {get;set;} = 0;
     public string Description {get;set;}  = string.Empty;
     public string Source {get;set;}  = string.Empty;
+    [NotMapped]
     public virtual ItemType Type { get; }
-    public int ItemID { get; set; } 
-
-    public MetaItem(){
-        ItemID = IdGenerationService.Instance.GetNextIdPlaceholder();
-    }
+    public int Id { get; set; } 
+    public void ResetImageCache() => _itemImage = null;
     }       
 
 public class WeaponData : MetaItem

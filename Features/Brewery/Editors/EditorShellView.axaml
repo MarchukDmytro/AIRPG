@@ -70,7 +70,7 @@
                 <DataTemplate  DataType="vm:EntityVM">
                   <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="*,Auto">
                       <TextBlock Grid.Column="0" Grid.Row="0" Text="{Binding Name}" FontSize="24" FontWeight="Bold" VerticalAlignment="Bottom"/>
-                      <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding ID, StringFormat='ID: {0}'}" FontSize="12" Opacity="0.7"/>
+                      <TextBlock Grid.Column="0" Grid.Row="1" Text="{Binding Id, StringFormat='ID: {0}'}" FontSize="12" Opacity="0.7"/>
                       <Border Grid.Column="1" Grid.RowSpan="2" BorderBrush="Black" Width="48" Height="48">
                           <Image Source="{Binding Image}" Stretch="UniformToFill"/>
                       </Border>
