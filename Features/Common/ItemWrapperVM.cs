@@ -166,9 +166,9 @@ public class DamageInstance : ViewModelBase
 
 }
 
-public abstract class ItemWrapperVM : ViewModelBase
+public class ItemWrapperVM : ViewModelBase
 {
-    protected readonly MetaItem _item;
+    protected readonly ItemData _item;
     public ItemType Type => _item.Type;
     public string Name {get => _item.Name;set {_item.Name = value;this.RaisePropertyChanged();}}
     public double Weight{get => _item.Weight;set {_item.Weight = value;this.RaisePropertyChanged();}}
@@ -180,7 +180,7 @@ public abstract class ItemWrapperVM : ViewModelBase
     public EnumArrays Options{get;} = EnumArrays.Instance;
     public Bitmap? ItemImage {get => _item.ItemImage;}
 
-    public ItemWrapperVM(MetaItem item){
+    public ItemWrapperVM(ItemData item){
         _item=item;   
     }
 }
@@ -207,15 +207,34 @@ public class WeaponWrapperVM : ItemWrapperVM
 public class ArmorWrapperVM : ItemWrapperVM
 {
     private ArmorData _armor => (ArmorData)_item;
+    private bool _isShield = false;
     public int AC {get => _armor.AC;set {_armor.AC = value;this.RaisePropertyChanged();}}
     public bool Disadvantage {get => _armor.Disadvantage;set {_armor.Disadvantage = value;this.RaisePropertyChanged();}}
-    public ArmorType AType {get => _armor.AType;set {_armor.AType = value;this.RaisePropertyChanged();}}
     public int Strength{get => _armor.Strength;set {_armor.Strength = value;this.RaisePropertyChanged();}}
     public int PutOn {get => _armor.PutOn;set {_armor.PutOn = value;this.RaisePropertyChanged();}}
     public int TakeOff {get => _armor.TakeOff;set {_armor.TakeOff = value;this.RaisePropertyChanged();}}
+    public bool IsShield {
+        get => _isShield;
+        set => this.RaiseAndSetIfChanged(ref _isShield,value);
+    }
+    public ArmorType AType {get => _armor.AType;
+    set {
+        if (value == ArmorType.Shield) ShieldPicked();
+        else IsShield = false;
+        _armor.AType = value;
+        this.RaisePropertyChanged();
+    }}
 
     public ArmorWrapperVM(ArmorData armor) : base(armor)
     {
+    }
+    private void ShieldPicked()
+    {
+        IsShield = true;
+        Disadvantage = false;
+        PutOn = 0;
+        TakeOff = 0;
+        Strength = 0;
     }
 }
 

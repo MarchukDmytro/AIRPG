@@ -39,7 +39,7 @@ public class ItemWorkAreaCreateViewModel : ViewModelBase
     public ReactiveCommand<Unit, Unit> SaveCommand { get; }
 
 
-    public ItemWorkAreaCreateViewModel(MetaItem itemState)
+    public ItemWorkAreaCreateViewModel(ItemData itemState)
     {
         _currentItem = itemState switch
         {

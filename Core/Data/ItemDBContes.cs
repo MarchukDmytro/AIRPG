@@ -7,7 +7,7 @@ namespace AIRPG.Core.Data;
 
 public class ItemDbContext : DbContext
 {
-    public DbSet<MetaItem> Items { get; set; }
+    public DbSet<ItemData> Items { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder o)
     {
@@ -18,12 +18,12 @@ public class ItemDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder b)
     {
-        b.Entity<MetaItem>()
+        b.Entity<ItemData>()
             .HasDiscriminator<string>("ItemType")
             .HasValue<WeaponData>("Weapon")
             .HasValue<ArmorData>("Armor");
 
-        b.Entity<MetaItem>()
+        b.Entity<ItemData>()
             .Ignore(x => x.ItemImage)
             .Ignore(x => x.Type);
 

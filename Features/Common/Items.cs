@@ -10,7 +10,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AIRPG.Features;
 
-public abstract class MetaItem
+public class ItemData
 {
     private Bitmap? _itemImage;
 
@@ -29,19 +29,19 @@ public abstract class MetaItem
             return _itemImage;
         }
     }
+    [NotMapped]
+    public virtual ItemType Type { get; }
     public string ImgPath {get;set;}  = string.Empty;
     public string Name {get;set;} = string.Empty;
     public double Weight {get;set;} = 0;
     public double Value {get;set;} = 0;
     public string Description {get;set;}  = string.Empty;
     public string Source {get;set;}  = string.Empty;
-    [NotMapped]
-    public virtual ItemType Type { get; }
     public int Id { get; set; } 
     public void ResetImageCache() => _itemImage = null;
     }       
 
-public class WeaponData : MetaItem
+public class WeaponData : ItemData
 {
     public List<Damage> Damage { get;set;} = new List<Damage>();
     public int Range { get;set;} = 0;
@@ -53,7 +53,7 @@ public class WeaponData : MetaItem
     public override ItemType Type => ItemType.Weapon;
 }
 
-public class ArmorData : MetaItem
+public class ArmorData : ItemData
 {
     public int AC { get;set; } = 0;
     public bool Disadvantage { get;set;} = false;
@@ -63,7 +63,6 @@ public class ArmorData : MetaItem
     public int TakeOff { get;set;} = 0;
     public override ItemType Type => ItemType.Armor;
 }
-
 public class Damage
 {
     public int DiceAmount = 0;

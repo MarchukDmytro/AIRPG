@@ -51,7 +51,8 @@ public enum ArmorType
 {
     Light,
     Medium,
-    Heavy
+    Heavy,
+    Shield
 }
 
 public enum DamageType
@@ -99,6 +100,7 @@ public enum WeaponProperties
 }
 public enum ItemType
 {
+    Common,
     Weapon, 
     Armor
 }

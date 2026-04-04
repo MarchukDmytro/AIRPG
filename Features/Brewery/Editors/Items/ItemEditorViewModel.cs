@@ -20,7 +20,7 @@ public class ItemEditorViewModel : ViewModelBase, IBreweryTabViewModel
     private bool _isNew = false; 
     private ViewModelBase _workspace;
     private EntityVM? _currentEntity;
-    private MetaItem _itemState;
+    private ItemData _itemState;
     public EntityVM? CurrentEntity
     {
         get => _currentEntity;
@@ -81,7 +81,7 @@ public class ItemEditorViewModel : ViewModelBase, IBreweryTabViewModel
         _isNew = true;
         if (CurrentEntity != null && _itemState != null) Save();
 
-        _itemState = Activator.CreateInstance( _itemState?.GetType() ?? typeof(WeaponData)) as MetaItem ?? new WeaponData();
+        _itemState = Activator.CreateInstance( _itemState?.GetType() ?? typeof(WeaponData)) as ItemData ?? new WeaponData();
 
         Workspace = new ItemWorkAreaCreateViewModel(_itemState);
 
@@ -180,7 +180,7 @@ public class EntityVM : ViewModelBase,IDataTemplateOnly
         get => _image;
         set => this.RaiseAndSetIfChanged(ref _image, value);
     }
-    public EntityVM( MetaItem ItemState)
+    public EntityVM( ItemData ItemState)
     {
         Name = ItemState.Name;
         Id = ItemState.Id;

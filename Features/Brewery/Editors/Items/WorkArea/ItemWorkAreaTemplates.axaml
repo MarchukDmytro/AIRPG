@@ -8,7 +8,7 @@
     <UserControl.DataTemplates>
 
         <DataTemplate DataType="vm:Items.ItemWorkAreaCreateViewModel" >
-            <Grid ColumnDefinitions="*,3*">
+            <Grid ColumnDefinitions="*,2.5*">
                 <Border BorderThickness="3" BorderBrush="Black">
                     <Grid Grid.Column="0" RowDefinitions="Auto,Auto,Auto,*" >
                         <!-- Image -->      
@@ -27,156 +27,169 @@
                             <ContentControl Content="{Binding CurrentItem}" Grid.Row="3">
                                 <ContentControl.DataTemplates>
                                     <DataTemplate DataType="common:WeaponWrapperVM">
-                                    <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                        <Grid Grid.Row="0" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto,*,Auto" Margin="5" >
 
-                                    <Grid Grid.Row="0" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto" Margin="5" >
+                                            <Label Grid.Row="0" Grid.Column="0" Content="Value: " VerticalAlignment="Center"/>
+                                            <NumericUpDown  Grid.Row="0" Value="{Binding Value, Converter={StaticResource FloorIntConverter}}" Grid.Column="1"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
 
-                                        <Label Grid.Row="0" Grid.Column="0" Content="Value: " VerticalAlignment="Center"/>
-                                        <NumericUpDown  Grid.Row="0" Value="{Binding Value, Converter={StaticResource FloorIntConverter}}" Grid.Column="1"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
-
-                                        <Label Grid.Row="1" Grid.Column="0" Content="Weight: " VerticalAlignment="Center"/>
-                                        <NumericUpDown  Grid.Row="1" Value="{Binding Weight}" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
-        
-                                        <Label Grid.Column="0" Grid.Row="2" Content="Normal Range: "/>  
-                                        <NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding Range, Converter={StaticResource FloorIntConverter}}" 
-                                        FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>          
-                                        
-                                        <Label Grid.Column="0" Grid.Row="3" Content="Maximum Range: "/>  
-                                        <NumericUpDown Grid.Column="1"  Grid.Row="3"  Value="{Binding MaxRange, Converter={StaticResource FloorIntConverter}}" 
-                                        FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>  
-
-                                        <Label Grid.Column="0" Grid.Row="4" Content="Weapon Type: "/>  
-                                        <ComboBox  Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Options.WeaponType}" PlaceholderText="None" SelectedItem="{Binding WType}">
-                                        </ComboBox>
-                                        
-                                        <Label Grid.Column="0" Grid.Row="5" Content="Martial Category: "/>  
-                                        <ComboBox  Grid.Column="1" Grid.Row="5" ItemsSource="{Binding Options.WeaponCategory}" PlaceholderText="None" SelectedItem="{Binding Category}">
-                                        </ComboBox>
-                                        
-
-                                        <Label Grid.Column="0" Grid.Row="6" Content="Weapon Mastery: "/>  
-                                        <ComboBox  Grid.Column="1" Grid.Row="6" ItemsSource="{Binding Options.MasteryProperty}" PlaceholderText="None" SelectedItem="{Binding Mastery}">
-                                        </ComboBox>                                              
-                                        <!-- Propertires -->
-                                        <Grid Grid.Row="7" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
-                                            <Label Grid.Column="0" Grid.Row="0" Content="Properties"/>  
-                                            <Button Content="+" Grid.Column="1" Grid.Row="0">
-                                                <Button.Flyout>
-                                                    <Flyout  Placement="Right">
-                                                        <Border>
-                                                            <ItemsControl ItemsSource="{Binding PropertiesVM.Options}">
-
-                                                                <ItemsControl.ItemsPanel>
-                                                                    <ItemsPanelTemplate>
-                                                                        <UniformGrid Columns="3"/>
-                                                                    </ItemsPanelTemplate>
-                                                                </ItemsControl.ItemsPanel>
-
-                                                                <ItemsControl.DataTemplates>
-                                                                    <DataTemplate DataType="common:PropertyOptionVM">
-                                                                        <Grid ColumnDefinitions="Auto,*">
-                                                                            <Label Grid.Column="0" Content="{Binding Property, StringFormat='{}{0}: '}"/>  
-                                                                            <CheckBox  Grid.Column="1" IsChecked="{Binding IsObtained}"></CheckBox>
-                                                                        </Grid>
-                                                                    </DataTemplate>
-                                                                </ItemsControl.DataTemplates>
-                                                            </ItemsControl>
-                                                        </Border>    
-                                                    </Flyout>
-                                                </Button.Flyout>    
-                                            </Button>
-                                        
-                                            <ItemsControl Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding PropertiesVM.Options}">
-                                                <ItemsControl.ItemsPanel>
-                                                    <ItemsPanelTemplate>
-                                                        <StackPanel/>
-                                                    </ItemsPanelTemplate>
-                                                </ItemsControl.ItemsPanel>
-                                                <ItemsControl.DataTemplates>
-                                                    <DataTemplate DataType="common:PropertyOptionVM">
-                                                        <Label Content="{Binding Property}" IsVisible="{Binding IsObtained}" />
-                                                    </DataTemplate>
-                                                </ItemsControl.DataTemplates>
-                                            </ItemsControl>
-                                        </Grid> 
-                                        
-                                        <Grid Grid.Row="8" Grid.ColumnSpan="2" ColumnDefinitions="Auto,Auto,*" RowDefinitions="Auto,Auto">
-                                            <Label Grid.Column="0" Grid.Row="0" Content="Damage: "/>  
-                                            <Button Grid.Column="1" Grid.Row="0" Content="+" Command="{Binding DamageProperty.AddDamageInstanceCommand}"/>
-                                            <ItemsControl Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding DamageProperty.DamageInstances}">
-                                                <ItemsControl.DataTemplates>
-                                                    <DataTemplate DataType="common:DamageInstance">
-                                                        <Border BorderThickness="2" BorderBrush="Black" Margin="0,3,0,3">
-                                                            <Grid RowDefinitions="Auto,Auto">
-                                                                <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,Auto,*">
-                                                                    <NumericUpDown Grid.Column="0" VerticalAlignment="Center" Value="{Binding DiceAmount, Converter={StaticResource FloorIntConverter}}"
-                                                                    FormatString="{}{0:F0}"  ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
-                                                                    <ComboBox Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding DiceOptions}" PlaceholderText="None" SelectedItem="{Binding Die}"/>
-                                                                    <NumericUpDown Grid.Column="2" VerticalAlignment="Center" Value="{Binding FlatDamage, Converter={StaticResource FloorIntConverter}}"
-                                                                    FormatString="{}{0:+#;-#;0}" ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
-                                                                    <Button Grid.Column="3" Content="❌" Command="{Binding SuicideCommand}"/>
-                                                                </Grid>
-                                                                <Grid Grid.Row="1" ColumnDefinitions="Auto,*">
-                                                                    <Label Grid.Column="0" Grid.Row="1" Content="Damage Type: "/>  
-                                                                    <ComboBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" ItemsSource="{Binding DamageTypes}" PlaceholderText="None" SelectedItem="{Binding TypeOfDamage}"/>
-                                                                </Grid>
-                                                            </Grid>
-                                                        </Border>
-
-                                                    </DataTemplate>
-                                                </ItemsControl.DataTemplates>
-                                            </ItemsControl>
+                                            <Label Grid.Row="1" Grid.Column="0" Content="Weight: " VerticalAlignment="Center"/>
+                                            <NumericUpDown  Grid.Row="1" Value="{Binding Weight}" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
+                                            <TextBox Text="{Binding Source}" Grid.Row="3"  Grid.ColumnSpan="2"
+                                                AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Watermark="Source"/>
                                         </Grid>
-                                        
-                                        <TextBox Text="{Binding Source}" Grid.Row="9"  Grid.ColumnSpan="2"
-                                        AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Watermark="Source"/>
-                                    </Grid>
-                                </ScrollViewer>
-                            </DataTemplate>
+                                    
+                                    </DataTemplate>
+
+
+                                    <DataTemplate DataType="common:WeaponWrapperVM">
+                                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+
+                                            <Grid Grid.Row="0" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto" Margin="5" >
+
+                                                <Label Grid.Row="0" Grid.Column="0" Content="Value: " VerticalAlignment="Center"/>
+                                                <NumericUpDown  Grid.Row="0" Value="{Binding Value, Converter={StaticResource FloorIntConverter}}" Grid.Column="1"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
+
+                                                <Label Grid.Row="1" Grid.Column="0" Content="Weight: " VerticalAlignment="Center"/>
+                                                <NumericUpDown  Grid.Row="1" Value="{Binding Weight}" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
+                
+                                                <Label Grid.Column="0" Grid.Row="2" Content="Normal Range: "/>  
+                                                <NumericUpDown Grid.Column="1" Grid.Row="2" Value="{Binding Range, Converter={StaticResource FloorIntConverter}}" 
+                                                FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>          
+                                                
+                                                <Label Grid.Column="0" Grid.Row="3" Content="Maximum Range: "/>  
+                                                <NumericUpDown Grid.Column="1"  Grid.Row="3"  Value="{Binding MaxRange, Converter={StaticResource FloorIntConverter}}" 
+                                                FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>  
+
+                                                <Label Grid.Column="0" Grid.Row="4" Content="Weapon Type: "/>  
+                                                <ComboBox  Grid.Column="1" Grid.Row="4" ItemsSource="{Binding Options.WeaponType}" PlaceholderText="None" SelectedItem="{Binding WType}"  HorizontalAlignment="Stretch">
+                                                </ComboBox>
+                                                
+                                                <Label Grid.Column="0" Grid.Row="5" Content="Martial Category: "/>  
+                                                <ComboBox  Grid.Column="1" Grid.Row="5" ItemsSource="{Binding Options.WeaponCategory}" PlaceholderText="None" SelectedItem="{Binding Category}"  HorizontalAlignment="Stretch">
+                                                </ComboBox>
+                                                
+
+                                                <Label Grid.Column="0" Grid.Row="6" Content="Weapon Mastery: "/>  
+                                                <ComboBox  Grid.Column="1" Grid.Row="6" ItemsSource="{Binding Options.MasteryProperty}" PlaceholderText="None" SelectedItem="{Binding Mastery}"  HorizontalAlignment="Stretch">
+                                                </ComboBox>                                              
+                                                
+                                                <Grid Grid.Row="7" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto">
+                                                    <Label Grid.Column="0" Grid.Row="0" Content="Properties"/>  
+                                                    <Button Content="+" Grid.Column="1" Grid.Row="0">
+                                                        <Button.Flyout>
+                                                            <Flyout  Placement="Right">
+                                                                <Border>
+                                                                    <ItemsControl ItemsSource="{Binding PropertiesVM.Options}">
+
+                                                                        <ItemsControl.ItemsPanel>
+                                                                            <ItemsPanelTemplate>
+                                                                                <UniformGrid Columns="3"/>
+                                                                            </ItemsPanelTemplate>
+                                                                        </ItemsControl.ItemsPanel>
+
+                                                                        <ItemsControl.DataTemplates>
+                                                                            <DataTemplate DataType="common:PropertyOptionVM">
+                                                                                <Grid ColumnDefinitions="Auto,*">
+                                                                                    <Label Grid.Column="0" Content="{Binding Property, StringFormat='{}{0}: '}"/>  
+                                                                                    <CheckBox  Grid.Column="1" IsChecked="{Binding IsObtained}"></CheckBox>
+                                                                                </Grid>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.DataTemplates>
+                                                                    </ItemsControl>
+                                                                </Border>    
+                                                            </Flyout>
+                                                        </Button.Flyout>    
+                                                    </Button>
+                                                
+                                                    <ItemsControl Grid.ColumnSpan="2" Grid.Row="1" ItemsSource="{Binding PropertiesVM.Options}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel/>
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.DataTemplates>
+                                                            <DataTemplate DataType="common:PropertyOptionVM">
+                                                                <Label Content="{Binding Property}" IsVisible="{Binding IsObtained}" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.DataTemplates>
+                                                    </ItemsControl>
+                                                </Grid> 
+                                                
+                                                <Grid Grid.Row="8" Grid.ColumnSpan="2" ColumnDefinitions="Auto,Auto,*" RowDefinitions="Auto,Auto">
+                                                    <Label Grid.Column="0" Grid.Row="0" Content="Damage: "/>  
+                                                    <Button Grid.Column="1" Grid.Row="0" Content="+" Command="{Binding DamageProperty.AddDamageInstanceCommand}"/>
+                                                    <ItemsControl Grid.Row="1" Grid.ColumnSpan="3" ItemsSource="{Binding DamageProperty.DamageInstances}">
+                                                        <ItemsControl.DataTemplates>
+                                                            <DataTemplate DataType="common:DamageInstance">
+                                                                <Border BorderThickness="2" BorderBrush="Black" Margin="0,3,0,3">
+                                                                    <Grid RowDefinitions="Auto,Auto">
+                                                                        <Grid Grid.Row="0" ColumnDefinitions="Auto,Auto,Auto,*">
+                                                                            <NumericUpDown Grid.Column="0" VerticalAlignment="Center" Value="{Binding DiceAmount, Converter={StaticResource FloorIntConverter}}"
+                                                                            FormatString="{}{0:F0}"  ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
+                                                                            <ComboBox Grid.Column="1" VerticalAlignment="Center" ItemsSource="{Binding DiceOptions}" PlaceholderText="None" SelectedItem="{Binding Die}"/>
+                                                                            <NumericUpDown Grid.Column="2" VerticalAlignment="Center" Value="{Binding FlatDamage, Converter={StaticResource FloorIntConverter}}"
+                                                                            FormatString="{}{0:+#;-#;0}" ShowButtonSpinner="False"   Margin="0,2"  Minimum="0"/>
+                                                                            <Button Grid.Column="3" Content="❌" Command="{Binding SuicideCommand}"/>
+                                                                        </Grid>
+                                                                        <Grid Grid.Row="1" ColumnDefinitions="Auto,*">
+                                                                            <Label Grid.Column="0" Grid.Row="1" Content="Damage Type: "/>  
+                                                                            <ComboBox Grid.Column="1" Grid.ColumnSpan="3" Grid.Row="1" ItemsSource="{Binding DamageTypes}" PlaceholderText="None" SelectedItem="{Binding TypeOfDamage}"/>
+                                                                        </Grid>
+                                                                    </Grid>
+                                                                </Border>
+
+                                                            </DataTemplate>
+                                                        </ItemsControl.DataTemplates>
+                                                    </ItemsControl>
+                                                </Grid>
+                                                
+                                                <TextBox Text="{Binding Source}" Grid.Row="9"  Grid.ColumnSpan="2"
+                                                AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Watermark="Source"/>
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </DataTemplate>
         
-                            <DataTemplate DataType="common:ArmorWrapperVM">
-                                <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                    <DataTemplate DataType="common:ArmorWrapperVM">
+                                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                                            <Grid Grid.Row="0" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto" Margin="5" >
 
-                                <Grid Grid.Row="0" ColumnDefinitions="Auto, *" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,Auto" Margin="5" >
+                                                <Label Grid.Column="0" Grid.Row="0" Content="Martial Category: "/>  
+                                                <ComboBox  Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Options.ArmorType}" PlaceholderText="None" SelectedItem="{Binding AType}" HorizontalAlignment="Stretch"/>
 
-                                    <Label Grid.Column="0" Grid.Row="0" Content="Martial Category: "/>  
-                                    <ComboBox  Grid.Column="1" Grid.Row="0" ItemsSource="{Binding Options.ArmorType}" PlaceholderText="None" SelectedItem="{Binding AType}"/>
+                                                <Label Grid.Column="0" Grid.Row="1" Content="Stealth disadvantage: "  IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}"/> 
+                                                <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding Disadvantage}"  IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}"/>
+                                                
+                                                <Label Grid.Row="2" Grid.Column="0" Content="Value: " VerticalAlignment="Center"/>
+                                                <NumericUpDown  Grid.Row="2" Value="{Binding Value , Converter={StaticResource FloorIntConverter}}" Grid.Column="1"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
+                                                
+                                                <Label Grid.Row="3" Grid.Column="0" Content="Weight: " VerticalAlignment="Center"/>
+                                                <NumericUpDown  Grid.Row="3" Value="{Binding Weight}" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
+                                                
+                                                <Label Grid.Column="0" Grid.Row="4" Content="Armor Class: "/>  
+                                                <NumericUpDown Grid.Column="1" Grid.Row="4" Value="{Binding AC, Converter={StaticResource FloorIntConverter}}" 
+                                                FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>          
+                                                
+                                                <Label Grid.Column="0" Grid.Row="5" Content="Strength requirement: " IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}"/>  
+                                                <NumericUpDown Grid.Column="1"  Grid.Row="5"  Value="{Binding Strength, Converter={StaticResource FloorIntConverter}}" 
+                                                FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0" IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}" />  
 
-                                    <Label Grid.Column="0" Grid.Row="1" Content="Stealth disadvantage: "/> 
-                                    <CheckBox Grid.Column="1" Grid.Row="1" IsChecked="{Binding Disadvantage}"/>
-                                    
-                                    <Label Grid.Row="2" Grid.Column="0" Content="Value: " VerticalAlignment="Center"/>
-                                    <NumericUpDown  Grid.Row="2" Value="{Binding Value , Converter={StaticResource FloorIntConverter}}" Grid.Column="1"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
-                                    
-                                    <Label Grid.Row="3" Grid.Column="0" Content="Weight: " VerticalAlignment="Center"/>
-                                    <NumericUpDown  Grid.Row="3" Value="{Binding Weight}" Grid.Column="1" Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>
-                                    
-                                    <Label Grid.Column="0" Grid.Row="4" Content="Armor Class: "/>  
-                                    <NumericUpDown Grid.Column="1" Grid.Row="4" Value="{Binding AC, Converter={StaticResource FloorIntConverter}}" 
-                                    FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>          
-                                    
-                                    <Label Grid.Column="0" Grid.Row="5" Content="Strength requirement: "/>  
-                                    <NumericUpDown Grid.Column="1"  Grid.Row="5"  Value="{Binding Strength, Converter={StaticResource FloorIntConverter}}" 
-                                    FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>  
+                                                <Label Grid.Column="0" Grid.Row="6" Content="Time to put on: : "  IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}"/>  
+                                                <NumericUpDown Grid.Column="1"  Grid.Row="6"  Value="{Binding PutOn, Converter={StaticResource FloorIntConverter}}" 
+                                                FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0" IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}"/>  
+                                                
+                                                <Label Grid.Column="0" Grid.Row="7" Content="Time to take off: "  IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}"/>  
+                                                <NumericUpDown Grid.Column="1"  Grid.Row="7"  Value="{Binding TakeOff, Converter={StaticResource FloorIntConverter}}" 
+                                                FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0" IsVisible="{Binding IsShield, Converter={x:Static BoolConverters.Not}}"/>  
+                                                
 
-                                    <Label Grid.Column="0" Grid.Row="6" Content="Time to put on: : "/>  
-                                    <NumericUpDown Grid.Column="1"  Grid.Row="6"  Value="{Binding PutOn, Converter={StaticResource FloorIntConverter}}" 
-                                    FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>  
-                                    
-                                    <Label Grid.Column="0" Grid.Row="7" Content="Time to take off: "/>  
-                                    <NumericUpDown Grid.Column="1"  Grid.Row="7"  Value="{Binding TakeOff, Converter={StaticResource FloorIntConverter}}" 
-                                    FormatString="{}{0:F0}"  Margin="0,2" ShowButtonSpinner="False"  Minimum="0"/>  
-                                    
-
-                                    <TextBox Text="{Binding Source}" Grid.Row="9"  Grid.ColumnSpan="2"
-                                    AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Watermark="Source"/>
-                                </Grid>
-                            </ScrollViewer>                                        
-                        </DataTemplate>
-
-                        </ContentControl.DataTemplates>
-                    </ContentControl>
-                </Border>             
+                                                <TextBox Text="{Binding Source}" Grid.Row="9"  Grid.ColumnSpan="2"
+                                                AcceptsReturn="True" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" TextWrapping="Wrap" Watermark="Source"/>
+                                            </Grid>
+                                        </ScrollViewer>                                        
+                                    </DataTemplate>
+                                </ContentControl.DataTemplates>
+                            </ContentControl>
+                        </Border>             
                     </Grid>
                 </Border>
             <!-- Description -->
